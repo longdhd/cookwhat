@@ -4,7 +4,7 @@ import Ingredient from "./ingredient";
 const recipeSchema = new Schema({
     title: { type: String, required: true },
     img: { type: String },
-    ingredients: { type: Ingredient, required: true },
+    ingredients: {type: [String], required: true},
     desc: { type: String, required: true },
 }, { timestamps: true })
 
