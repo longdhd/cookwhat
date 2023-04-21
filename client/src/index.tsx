@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -12,13 +13,14 @@ const root = ReactDOM.createRoot(
 const theme = createTheme({
   typography: {
     fontFamily: `"Noto Sans", sans-serif`
-  }
+  },
 })
 
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <App />
+      <CssBaseline/>
     </ThemeProvider>
   </React.StrictMode>
 );

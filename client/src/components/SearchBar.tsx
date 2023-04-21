@@ -2,9 +2,12 @@ import * as React from 'react';
 import useAutocomplete, { AutocompleteGetTagProps } from '@mui/base/useAutocomplete';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import Slide from '@mui/material/Slide';
 import { styled } from '@mui/material/styles';
 import { autocompleteClasses } from '@mui/material/Autocomplete';
 import { Ingredient } from '../models';
+import { Box } from '@mui/system';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const Root = styled('div')(
   ({ theme }) => `
@@ -59,7 +62,18 @@ const InputWrapper = styled('div')(
     border: 0;
     margin: 0;
     outline: 0;
+
+    ::placeholder,
+    ::-webkit-input-placeholder {
+      text-align: center;
+      font-size: 14px;
+    }
+    :-ms-input-placeholder {
+       text-align: center;
+       font-size: 14px;
+    }
   }
+
 `,
 );
 
@@ -115,7 +129,7 @@ const StyledTag = styled(Tag)<TagProps>(
 const Listbox = styled('ul')(
   ({ theme }) => `
   width: 480px;
-  margin: 2px 0 0;
+  margin: 8px 0 0;
   padding: 0;
   position: absolute;
   list-style: none;
@@ -149,8 +163,12 @@ const Listbox = styled('ul')(
     background-color: ${theme.palette.mode === 'dark' ? '#2b2b2b' : '#fafafa'};
     font-weight: 600;
 
-    & svg {
-      color: #1890ff;
+    & svg:first-child {
+      color: green;
+    }
+
+    & svg:last-child {
+      color: red;
     }
   }
 
@@ -160,6 +178,10 @@ const Listbox = styled('ul')(
 
     & svg {
       color: currentColor;
+    }
+
+    & svg:last-child:hover {
+        color: currentColor;
     }
   }
 `,
@@ -183,12 +205,43 @@ export default function CustomizedHook({ searchOptions }: CustomizedHookProps) {
     setAnchorEl,
   } = useAutocomplete({
     id: 'customized-hook-demo',
-    defaultValue: [searchOptions[1]],
+    defaultValue: [],
     multiple: true,
     options: searchOptions,
     isOptionEqualToValue: (option, value) => option.title === value.title,
     getOptionLabel: (option) => option.title,
   });
+
+  const Suggestion = () => {
+    return (
+      <Slide timeout={300} direction="up" in={focused} mountOnEnter unmountOnExit>
+        <Listbox {...getListboxProps()}>
+          {(groupedOptions as typeof searchOptions)
+            //Sort alphabetically
+            .sort(function (a, b) {
+              if (a.title < b.title) {
+                return -1;
+              }
+              if (a.title > b.title) {
+                return 1;
+              }
+              return 0;
+            })
+
+            //Render autocomplete list
+            .map((option, index) => (
+              <li {...getOptionProps({ option, index })}>
+                <span>{option.title}</span>
+                <img src={option.img} height={50} width={50} style={{
+                  objectFit: 'cover'
+                }} alt={option.title} />
+                {!value.includes(option) ? <CheckIcon fontSize="small" sx={{ marginLeft: 1 }} /> : <ClearIcon fontSize="small" sx={{ marginLeft: 1 }} />}
+              </li>
+            ))}
+        </Listbox>
+      </Slide>
+    )
+  }
 
   return (
     <Root>
@@ -198,22 +251,12 @@ export default function CustomizedHook({ searchOptions }: CustomizedHookProps) {
           {value.map((option: Ingredient, index: number) => (
             <StyledTag label={option.title} {...getTagProps({ index })} />
           ))}
-          <input {...getInputProps()} />
+          <input {...getInputProps()} placeholder={!focused && value.length < 1 ? 'thịt, đậu, rau củ etc.' : ''} />
         </InputWrapper>
       </div>
-      {groupedOptions.length > 0 ? (
-        <Listbox {...getListboxProps()}>
-          {(groupedOptions as typeof searchOptions).map((option, index) => (
-            <li {...getOptionProps({ option, index })}>
-              <span>{option.title}</span>
-              <img src={option.img} height={50} width={50} style={{
-                objectFit: 'cover'
-              }} alt={option.title} />
-              <CheckIcon fontSize="small" />
-            </li>
-          )).sort()}
-        </Listbox>
-      ) : null}
+      {groupedOptions.length > 0 ?
+        <Suggestion />
+        : null}
     </Root>
   );
 }

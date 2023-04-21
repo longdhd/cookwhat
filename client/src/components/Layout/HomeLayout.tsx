@@ -20,16 +20,7 @@ const useStyles = makeStyles(() => (
             position:'relative',
         },
         footer: {},
-        background: {
-            height: '100vh',
-            width: '100%',
-            position:'absolute',
-            background:'url("./images/background.jpg")',
-            top: 0,
-            left: 0,
-            zIndex:-1,
-            filter:'blur(10px)'
-        }
+        
     })
 ))
 
@@ -51,7 +42,6 @@ export default function HomeLayout(props: HomeLayoutProps) {
                 </Box>
                 <Box className={classes.footer}></Box>
             </Box>
-            <Box className={classes.background}></Box>
         </Box>
     );
 }
