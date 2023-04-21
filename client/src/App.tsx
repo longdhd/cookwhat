@@ -1,40 +1,19 @@
-import { Box, Theme } from '@mui/material';
-import { createStyles, makeStyles } from '@mui/styles';
-import React, { useEffect, useState } from 'react';
-import ingredientApi from './api/ingredientApi';
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-import AutocompleteMultiInput from './components/SearchBar';
-import { Ingredient } from './models';
-
-const useStyles = makeStyles((theme: Theme) => (
-  createStyles({
-    root: {
-      height: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'yellow'
-    }
-  })
-))
+import HomeLayout from './components/Layout/HomeLayout';
+import HomePage from './pages/HomePage';
 
 function App() {
-  const classes = useStyles();
-  const [searchOptions, setSearchOptions] = useState<Array<Ingredient>>([]);
-
-  useEffect(() => {
-    (async () => {
-      const response = await ingredientApi.getAll();
-      setSearchOptions(response);
-    })()
-  })
 
   return (
-    <div className="App">
-      <Box className={classes.root}>
-        {searchOptions.length > 0 && <AutocompleteMultiInput searchOptions={searchOptions}/>}
-      </Box>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<HomeLayout />}>
+          <Route path="/" element={<HomePage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

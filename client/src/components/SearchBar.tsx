@@ -18,17 +18,24 @@ const Label = styled('label')`
   padding: 0 0 4px;
   line-height: 1.5;
   display: block;
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+  color: white;
 `;
 
 const InputWrapper = styled('div')(
   ({ theme }) => `
-  width: 300px;
+  width: 480px;
   border: 1px solid ${theme.palette.mode === 'dark' ? '#434343' : '#d9d9d9'};
   background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
   border-radius: 4px;
   padding: 1px;
   display: flex;
   flex-wrap: wrap;
+
+  @media only screen and (max-width: 412px){
+    width: 360px;
+  }
 
   &:hover {
     border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#40a9ff'};
@@ -107,7 +114,7 @@ const StyledTag = styled(Tag)<TagProps>(
 
 const Listbox = styled('ul')(
   ({ theme }) => `
-  width: 300px;
+  width: 480px;
   margin: 2px 0 0;
   padding: 0;
   position: absolute;
@@ -119,9 +126,15 @@ const Listbox = styled('ul')(
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 1;
 
+  @media only screen and (max-width: 412px){
+    width: 360px;
+  }
+
   & li {
     padding: 5px 12px;
     display: flex;
+    justify-content: center;
+    align-items: center;
 
     & span {
       flex-grow: 1;
@@ -173,13 +186,14 @@ export default function CustomizedHook({ searchOptions }: CustomizedHookProps) {
     defaultValue: [searchOptions[1]],
     multiple: true,
     options: searchOptions,
+    isOptionEqualToValue: (option, value) => option.title === value.title,
     getOptionLabel: (option) => option.title,
   });
 
   return (
     <Root>
       <div {...getRootProps()}>
-        <Label {...getInputLabelProps()}>Customized hook</Label>
+        <Label {...getInputLabelProps()}>Tìm món ăn bằng nguyên liệu:</Label>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
           {value.map((option: Ingredient, index: number) => (
             <StyledTag label={option.title} {...getTagProps({ index })} />
@@ -192,10 +206,12 @@ export default function CustomizedHook({ searchOptions }: CustomizedHookProps) {
           {(groupedOptions as typeof searchOptions).map((option, index) => (
             <li {...getOptionProps({ option, index })}>
               <span>{option.title}</span>
-              <img src={option.img} height={50} width={50} alt={option.title}/>
+              <img src={option.img} height={50} width={50} style={{
+                objectFit: 'cover'
+              }} alt={option.title} />
               <CheckIcon fontSize="small" />
             </li>
-          ))}
+          )).sort()}
         </Listbox>
       ) : null}
     </Root>
