@@ -1,10 +1,9 @@
 import { InferSchemaType, model, Schema } from "mongoose";
-import Ingredient from "./ingredient";
 
 const recipeSchema = new Schema({
     title: { type: String, required: true },
     img: { type: String },
-    ingredients: {type: [String], required: true},
+    ingredients: {type: [Schema.Types.ObjectId], required: true, ref: 'Ingredient'},
     desc: { type: String, required: true },
 }, { timestamps: true })
 

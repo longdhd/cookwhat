@@ -11,6 +11,6 @@ router.post("/", RecipeController.createRecipe);
 
 router.post("/getRecipesByIngredients", RecipeController.getRecipesByIngredients);
 
-router.patch("/:recipeId", RecipeController.updateRecipe);
+// router.patch("/:recipeId", RecipeController.updateRecipe);
 
 export default router;

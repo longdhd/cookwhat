@@ -3,7 +3,7 @@ import { createStyles, makeStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
 import ingredientApi from "../api/ingredientApi";
 import LoadingLottie from "../components/LoadingLottie";
-import SearchBar from '../components/SearchBar'
+import SearchBar from '../components/SearchBar';
 import { Ingredient } from "../models";
 
 const useStyles = makeStyles(() => (
@@ -30,34 +30,29 @@ const useStyles = makeStyles(() => (
 ))
 
 export default function HomePage() {
-    const [searchOptions, setSearchOptions] = useState<Array<Ingredient>>([]);
+    const [searchOptions, setSearchOptions] = useState<Ingredient[]>([]);
+    const classes = useStyles();
 
     useEffect(() => {
-        let isApiSubsried = true;
         const fetchData = async () => {
-            const response = await ingredientApi.getAll();
-            setSearchOptions(response);
+            const { data } = await ingredientApi.getAll();
+            setSearchOptions(data);
         };
 
-        if (isApiSubsried) fetchData();
-
-        return () => {
-            isApiSubsried = false;
-        }
+        fetchData();
     }, [])
-    const classes = useStyles();
     return (
         <>
             {searchOptions.length > 0 ?
-                <Box>
+                <>
                     <Box className={classes.home}>
                         <SearchBar searchOptions={searchOptions} />
                     </Box>
                     <Box className={classes.background}></Box>
-                </Box> :
-                <LoadingLottie />}
+                </>
+                : <LoadingLottie />
+            }
             )
-
         </>
     );
 }

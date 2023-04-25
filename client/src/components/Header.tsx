@@ -53,8 +53,8 @@ export default function Header() {
                             horizontal: 'right',
                         }}
                     >
-                        {mobileMenu.map(item => (
-                            <MenuItem>
+                        {mobileMenu.map((item, idx) => (
+                            <MenuItem key={idx}>
                                 <Typography textAlign="center">{item}</Typography>
                             </MenuItem>
                         ))}

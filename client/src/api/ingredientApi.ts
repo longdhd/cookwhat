@@ -1,8 +1,8 @@
-import { Ingredient } from "../models";
+import { Ingredient, ListResponse } from "../models";
 import axiosClient from "./axiosClient";
 
 const ingredientApi = {
-    getAll(): Promise<Ingredient[]> {
+    getAll(): Promise<ListResponse<Ingredient>> {
         const url = "/ingredients";
         return axiosClient.get(url);
     }

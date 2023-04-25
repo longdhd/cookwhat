@@ -5,6 +5,13 @@
   src: url("../public/fonts/Noto_Sans/NotoSans-Black.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Noto Sans Medium";
+  font-weight: lighter;
+  font-style: normal;
+  src: url("../public/fonts/Noto_Sans/NotoSans-Medium.ttf") format("truetype");
+}
+
 body {
   margin: 0;
   font-family: "Noto Sans";

@@ -217,17 +217,6 @@ export default function CustomizedHook({ searchOptions }: CustomizedHookProps) {
       <Slide timeout={300} direction="up" in={focused} mountOnEnter unmountOnExit>
         <Listbox {...getListboxProps()}>
           {(groupedOptions as typeof searchOptions)
-            //Sort alphabetically
-            .sort(function (a, b) {
-              if (a.title < b.title) {
-                return -1;
-              }
-              if (a.title > b.title) {
-                return 1;
-              }
-              return 0;
-            })
-
             //Render autocomplete list
             .map((option, index) => (
               <li {...getOptionProps({ option, index })}>

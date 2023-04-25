@@ -5,8 +5,21 @@ import IngredientModel from '../models/ingredient'
 
 export const getIngredients: RequestHandler = async (req, res, next) => {
     try {
-        const ingredients = await IngredientModel.find().exec();
-        res.status(200).json(ingredients);
+        const { _page = 1, _limit = 10 } = req.query;
+
+        const ingredients = await IngredientModel.find({ ...req.query })
+            .sort({ "title": 1 })
+            .limit(Number(_limit) * 1)
+            .skip((Number(_page) - 1) * Number(_limit))
+            .exec();
+
+        const count = await IngredientModel.countDocuments();
+
+        res.status(200).json({
+            data: ingredients,
+            totalPages: Math.ceil(count / Number(_limit)),
+            currentPage: _page,
+        });
     } catch (error) {
         next(error);
     }
