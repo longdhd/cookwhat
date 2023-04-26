@@ -31,7 +31,7 @@ export default function HomeLayout(props: HomeLayoutProps) {
             height: '100%',
             width: '100%',
             position:'relative',
-            overflowY:'hidden'
+            overflowX:'hidden'
         }}>
             <Box className={classes.root}>
                 <Box className={classes.header}>

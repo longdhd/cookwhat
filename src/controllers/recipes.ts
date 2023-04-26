@@ -10,10 +10,10 @@ interface Ingredient {
 
 export const getRecipes: RequestHandler = async (req, res, next) => {
     try {
-        const { _page = 1, _limit = 10, _order = "desc" } = req.query;
+        const { _page = 1, _limit = 10, _order = 1 } = req.query;
         const _sort =
             (req.query._sort && _order)
-                ? Object.fromEntries([[req.query._sort, _order]])
+                ? Object.fromEntries([[req.query._sort, Number(_order)]])
                 : { "createAt": 1 };
 
         console.log(_sort);
@@ -32,37 +32,15 @@ export const getRecipes: RequestHandler = async (req, res, next) => {
     }
 }
 
-interface GetRecipesByIngredientsBody {
-    ingredientsArr?: Ingredient[]
-}
-
-export const getRecipesByIngredients: RequestHandler<unknown, any[], GetRecipesByIngredientsBody, unknown> = async (req, res, next) => {
-    const ingredientsArr = req.body.ingredientsArr;
+export const getRecipesByIngredients: RequestHandler<unknown, any[], any[], unknown> = async (req, res, next) => {
+    const ingredientsArr = req.body;
 
     try {
         if (!ingredientsArr) {
             throw createHttpError(400, "Request must have ingredients");
         }
 
-        // const allRecipes = await RecipeModel.find().exec();
-        // const availableRecipes: any[] = [];
-        // allRecipes.map(recipe => {
-        //     let count = 0;
-
-        //     //Count how many ingredients from recipe match user's ingredient
-        //     for (let idx = 0; idx <= ingredientsArr.length; idx++) {
-        //         if (recipe.ingredients.includes(ingredientsArr[idx])) {
-        //             count++;
-        //         }
-        //     }
-
-        //     //If user's ingredients match the recipe's ingredient
-        //     if (count >= (ingredientsArr.length / 2)) {
-        //         availableRecipes.push(recipe);
-        //     }
-        // })
-
-        const recipes = await RecipeModel.find({ ingredients: { $in: ingredientsArr } }).exec();
+        const recipes = await RecipeModel.find({ ingredients: { $in: ingredientsArr } }).populate('title').exec();
 
         res.status(200).json(recipes);
     } catch (error) {

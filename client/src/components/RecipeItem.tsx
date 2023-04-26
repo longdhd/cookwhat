@@ -19,10 +19,10 @@ export default function RecipeItem({ recipe }: RecipeItemProps) {
                 title={recipe.title}
             />
             <CardContent>
-                <Typography gutterBottom variant="h5" component="div" sx={{ textTransform: 'capitalize' }}>
+                <Typography gutterBottom variant="h6" component="div" noWrap sx={{ textTransform: 'capitalize' }}>
                     {recipe.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'Noto Sans Medium' }}>
+                <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'Noto Sans Medium', overflow: "hidden", textOverflow: 'ellipsis', WebkitLineClamp: 3, display: '-webkit-box', WebkitBoxOrient: 'vertical' }}>
                     {recipe.desc}
                 </Typography>
             </CardContent>

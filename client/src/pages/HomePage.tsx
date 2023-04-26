@@ -1,9 +1,12 @@
 import { Box } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
+import { Schema } from "mongoose";
 import { useEffect, useState } from "react";
 import ingredientApi from "../api/ingredientApi";
+import { useAppDispatch } from "../app/hook";
 import LoadingLottie from "../components/LoadingLottie";
 import SearchBar from '../components/SearchBar';
+import { getRecipesByIngredients } from "../features/recipes/recipeReducer";
 import { Ingredient } from "../models";
 
 const useStyles = makeStyles(() => (
@@ -32,6 +35,7 @@ const useStyles = makeStyles(() => (
 export default function HomePage() {
     const [searchOptions, setSearchOptions] = useState<Ingredient[]>([]);
     const classes = useStyles();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,12 +45,17 @@ export default function HomePage() {
 
         fetchData();
     }, [])
+
+    const handleSearch = (ingredientArr: Schema.Types.ObjectId[]) => {
+        dispatch(getRecipesByIngredients(ingredientArr));
+    }
+
     return (
         <>
             {searchOptions.length > 0 ?
                 <>
                     <Box className={classes.home}>
-                        <SearchBar searchOptions={searchOptions} />
+                        <SearchBar searchOptions={searchOptions} onSearch={handleSearch}/>
                     </Box>
                     <Box className={classes.background}></Box>
                 </>

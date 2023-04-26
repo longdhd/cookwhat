@@ -31,12 +31,12 @@ export default function Header() {
                     </NavLink>
                 </Typography>
                 <Typography component="div" sx={{ flexGrow: 0.1, display: { xs: 'none', md: 'flex' } }}>
-                    <NavLink to="/recipes?option=most-picked" style={{ textDecoration: 'none', color: 'black' }}>
+                    <NavLink to="/recipes?_sort=most-picked" style={{ textDecoration: 'none', color: 'black' }}>
                         <Button color="inherit">Most Picked</Button>
                     </NavLink>
                 </Typography>
                 <Typography component="div" sx={{ flexGrow: 0.1, display: { xs: 'none', md: 'flex' } }}>
-                    <NavLink to="/recipes?option=recommended" style={{ textDecoration: 'none', color: 'black' }}>
+                    <NavLink to="/recipes?_sort=recommended" style={{ textDecoration: 'none', color: 'black' }}>
                         <Button color="inherit">Recommended</Button>
                     </NavLink>
                 </Typography>
