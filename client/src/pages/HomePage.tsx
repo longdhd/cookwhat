@@ -2,11 +2,12 @@ import { Box } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import { Schema } from "mongoose";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ingredientApi from "../api/ingredientApi";
 import { useAppDispatch } from "../app/hook";
 import LoadingLottie from "../components/LoadingLottie";
 import SearchBar from '../components/SearchBar';
-import { getRecipesByIngredients } from "../features/recipes/recipeReducer";
+import { getRecipesByIngredients } from "../features/recipes/recipeSlice";
 import { Ingredient } from "../models";
 
 const useStyles = makeStyles(() => (
@@ -36,6 +37,7 @@ export default function HomePage() {
     const [searchOptions, setSearchOptions] = useState<Ingredient[]>([]);
     const classes = useStyles();
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,8 +48,9 @@ export default function HomePage() {
         fetchData();
     }, [])
 
-    const handleSearch = (ingredientArr: Schema.Types.ObjectId[]) => {
+    const handleSearch = (ingredientArr: Ingredient[]) => {
         dispatch(getRecipesByIngredients(ingredientArr));
+        navigate("/recipes?getRecipesByIngredients")
     }
 
     return (
@@ -55,7 +58,7 @@ export default function HomePage() {
             {searchOptions.length > 0 ?
                 <>
                     <Box className={classes.home}>
-                        <SearchBar searchOptions={searchOptions} onSearch={handleSearch}/>
+                        <SearchBar searchOptions={searchOptions} onSearch={handleSearch} />
                     </Box>
                     <Box className={classes.background}></Box>
                 </>

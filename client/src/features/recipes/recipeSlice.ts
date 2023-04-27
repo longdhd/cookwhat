@@ -3,12 +3,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { Schema } from 'mongoose'
 import recipeApi from '../../api/recipeApi'
 import type { RootState } from '../../app/store'
-import { ListParams, Recipe } from '../../models'
+import { Ingredient, ListParams, Recipe } from '../../models'
 
 interface RecipeState {
     loading: boolean,
     isSearchingRecipesByIngredients: boolean,
-    ingredientArr: Schema.Types.ObjectId[],
+    ingredientArr: Ingredient[],
     list: Recipe[],
     filter: ListParams,
     error: string
@@ -34,9 +34,10 @@ export const getRecipes = createAsyncThunk('recipe/getRecipes',
 )
 
 export const getRecipesByIngredients = createAsyncThunk('recipe/getRecipesByIngredients',
-    async (ingredientArray: Schema.Types.ObjectId[], thunkApi) => {
+    async (ingredientArray: Ingredient[], thunkApi) => {
         thunkApi.dispatch(recipeActions.setIngredientArr(ingredientArray));
-        const recipes = await recipeApi.getRecipesByIngredients(ingredientArray);
+        const ingredientArr = ingredientArray.map(item => item._id);
+        const recipes = await recipeApi.getRecipesByIngredients(ingredientArr);
         return recipes;
     }
 )
@@ -58,16 +59,15 @@ const recipeSlice = createSlice({
                 state.loading = true;
                 state.isSearchingRecipesByIngredients = false;
             })
-            .addCase(getRecipes.fulfilled, (state : RecipeState, action) => {
+            .addCase(getRecipes.fulfilled, (state: RecipeState, action) => {
                 state.loading = false;
-                state.isSearchingRecipesByIngredients = false;
                 state.list = action.payload;
             })
             .addCase(getRecipes.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "";
             })
-            .addCase(getRecipesByIngredients.fulfilled, (state : RecipeState, action) => {
+            .addCase(getRecipesByIngredients.fulfilled, (state: RecipeState, action) => {
                 state.isSearchingRecipesByIngredients = true;
                 state.list = action.payload;
             })
@@ -77,6 +77,8 @@ const recipeSlice = createSlice({
 export const recipeActions = recipeSlice.actions;
 
 export const selectRecipeLoading = (state: RootState) => state.recipe.loading;
+export const seletIsSearchingRecipesByIngredients = (state: RootState) => state.recipe.isSearchingRecipesByIngredients;
+export const selectIngredientArray = (state: RootState) => state.recipe.ingredientArr;
 export const selectRecipeList = (state: RootState) => state.recipe.list;
 export const selectRecipeFilter = (state: RootState) => state.recipe.filter;
 

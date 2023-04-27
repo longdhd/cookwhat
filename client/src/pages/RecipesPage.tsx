@@ -3,10 +3,10 @@ import { createStyles, makeStyles } from '@mui/styles';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAppDispatch } from '../app/hook';
+import { useAppDispatch, useAppSelector } from '../app/hook';
 import RecipeItem from '../components/RecipeItem';
-import { getRecipes } from '../features/recipes/recipeReducer';
-import { Recipe } from '../models';
+import { getRecipes, selectIngredientArray, selectRecipeList, seletIsSearchingRecipesByIngredients } from '../features/recipes/recipeSlice';
+import { Ingredient, Recipe } from '../models';
 
 export interface RecipesPageProps {
 }
@@ -35,6 +35,9 @@ export default function RecipesPage(props: RecipesPageProps) {
   const [title, setTitle] = useState("Khám phá tất cả công thức");
   const [desc, setDesc] = useState("Hôm nay ăn gì? Tìm kiếm câu trả lời cho câu hỏi này với các công thức nấu ăn.");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const isSearchingRecipesByIngredients = useAppSelector(seletIsSearchingRecipesByIngredients);
+  const ingredientArray = useAppSelector(selectIngredientArray);
+  const recipeList = useAppSelector(selectRecipeList);
 
   useEffect(() => {
 
@@ -50,13 +53,27 @@ export default function RecipesPage(props: RecipesPageProps) {
       }
     }
 
-    fetchData(location.search);
-  }, [dispatch, location.search])
+    if (!isSearchingRecipesByIngredients) {
+      fetchData(location.search);
+    } else {
+      setRecipes(recipeList);
+    }
+  }, [dispatch, isSearchingRecipesByIngredients, location.search, recipeList])
 
   return (
     <Box className={classes.root}>
-      <Typography variant='h4' sx={{ mt: 4 }}>{title}</Typography>
-      <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px' }}>{desc}</Typography>
+      {!isSearchingRecipesByIngredients && <>
+        <Typography variant='h4' sx={{ mt: 4 }}>{title}</Typography>
+        <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px' }}>{desc}</Typography>
+      </>}
+      {isSearchingRecipesByIngredients && <>
+        <Typography variant='h4' sx={{ mt: 4 }}>Tìm món ăn bằng nguyên liệu: </Typography>
+        <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px', display:'flex', alignItems:'center', gap: 2 }}>
+          {ingredientArray.map(item => (
+            <div style={{background:'#067A91', border: '1px solid #fff', borderRadius: '4px', padding:'0 10px', height:'36px', display:'flex', alignItems:'center', color:'#fff'}}><span>{item.title.concat(' ')}</span></div>
+          ))}
+        </Typography>
+      </>}
       <Grid container spacing={4} sx={{ mt: 4, pb: 4 }}>
         {recipes && recipes.map(repcipe => (
           <Grid item xs={12} md={6} lg={3} key={repcipe.title}>

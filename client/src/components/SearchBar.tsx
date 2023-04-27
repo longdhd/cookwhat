@@ -191,7 +191,7 @@ const Listbox = styled('ul')(
 
 interface CustomizedHookProps {
   searchOptions: Ingredient[],
-  onSearch?: (ingredientArr: Schema.Types.ObjectId[]) => void
+  onSearch?: (ingredientArr: Ingredient[]) => void
 }
 
 export default function CustomizedHook({ searchOptions, onSearch }: CustomizedHookProps) {
@@ -250,9 +250,8 @@ export default function CustomizedHook({ searchOptions, onSearch }: CustomizedHo
   }
 
   const handleSubmit = () => {
-    const objectIdArr = ingredients?.map(item => item._id);
-    if(objectIdArr){
-      onSearch?.(objectIdArr);
+    if (ingredients) {
+      onSearch?.(ingredients);
     }
   }
 

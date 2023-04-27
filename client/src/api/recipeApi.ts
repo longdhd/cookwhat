@@ -10,7 +10,7 @@ const recipeApi = {
 
     getRecipesByIngredients(data: Schema.Types.ObjectId[]):Promise<Recipe[]>{
         const url = "/recipes/getRecipesByIngredients";
-        return axiosClient.post(url, data);
+        return axiosClient.post(url, {ingredientsArr : data});
     }
 }
 

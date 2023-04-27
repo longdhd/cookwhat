@@ -32,8 +32,12 @@ export const getRecipes: RequestHandler = async (req, res, next) => {
     }
 }
 
-export const getRecipesByIngredients: RequestHandler<unknown, any[], any[], unknown> = async (req, res, next) => {
-    const ingredientsArr = req.body;
+interface GetRecipesByIngredientsBody {
+    ingredientsArr: Schema.Types.ObjectId[]
+}
+
+export const getRecipesByIngredients: RequestHandler<unknown, any[], GetRecipesByIngredientsBody, unknown> = async (req, res, next) => {
+    const ingredientsArr = req.body.ingredientsArr;
 
     try {
         if (!ingredientsArr) {
