@@ -1,66 +1,39 @@
-import { Box, Menu, MenuItem } from '@mui/material';
-import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import { Box, Typography } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
-import MenuIcon from '@mui/icons-material/Menu';
 
 const useStyles = makeStyles(() => (
     createStyles({
-        
+        headerContainer: {
+            display: 'inline-flex',
+            height: '160px',
+            width: '100%',
+            background: '#2C2D30',
+            padding: '0 24px',
+            flexFlow:'row nowrap',
+            alignItems:'center',
+            '& > *':{
+                flexGrow: 1,
+                color:'#fff',
+                letterSpacing: 2
+            }
+        },
+        logo: {
+            background:`url(${logo})`,
+            backgroundSize:'cover',
+            backgroundRepeat:'no-repeat',
+            backgroundPositionY:'45%',
+            height:'100%',
+        }
     })
 ))
-
 export default function Header() {
-    const [showMobileMenu, setShowMobileMenu] = useState(false);
-    const mobileMenu = ["All Recipes", "Most Picked", "Recommend"];
+    const classes = useStyles();
     return (
-        <AppBar position="static" color='default'>
-            <Toolbar>
-                <NavLink to="/" style={{ display: 'flex' }}><img src={logo} height={50} alt="logo" /></NavLink>
-                <Typography variant="h5" component="div" sx={{ flexGrow: 0.7, marginLeft: 1 }}>
-                    <NavLink to="/" style={{ textDecoration: 'none', color: 'black' }}>Cooking Ninja</NavLink>
-                </Typography>
-                <Typography component="div" sx={{ flexGrow: 0.1, display: { xs: 'none', md: 'flex' } }}>
-                    <NavLink to="/recipes" style={{ textDecoration: 'none', color: 'black' }}>
-                        <Button color="inherit">All Recipes</Button>
-                    </NavLink>
-                </Typography>
-                <Typography component="div" sx={{ flexGrow: 0.1, display: { xs: 'none', md: 'flex' } }}>
-                    <NavLink to="/recipes?_sort=most-picked" style={{ textDecoration: 'none', color: 'black' }}>
-                        <Button color="inherit">Most Picked</Button>
-                    </NavLink>
-                </Typography>
-                <Typography component="div" sx={{ flexGrow: 0.1, display: { xs: 'none', md: 'flex' } }}>
-                    <NavLink to="/recipes?_sort=recommended" style={{ textDecoration: 'none', color: 'black' }}>
-                        <Button color="inherit">Recommended</Button>
-                    </NavLink>
-                </Typography>
-                <Box component="div"
-                    sx={{ display: { xs: 'flex', md: 'none' }, flexGrow: 0.3, justifyContent: 'flex-end' }}
-                    onClick={() => setShowMobileMenu(!showMobileMenu)}
-                >
-                    <MenuIcon fontSize={'large'} />
-                    <Menu
-                        open={showMobileMenu}
-                        sx={{ mt: '32px' }}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                    >
-                        {mobileMenu.map((item, idx) => (
-                            <MenuItem key={idx}>
-                                <Typography textAlign="center">{item}</Typography>
-                            </MenuItem>
-                        ))}
-                    </Menu>
-                </Box>
-            </Toolbar>
-        </AppBar>
+        <Box className={classes.headerContainer}>
+            <Typography variant='h4' align='left'>COOKING NINJA</Typography>
+            <Box className={classes.logo}></Box>
+            <Typography variant='h4' align='right'>CHOP, CHOP, CHEW</Typography>
+        </Box>
     );
 }

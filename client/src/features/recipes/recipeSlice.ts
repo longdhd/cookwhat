@@ -51,6 +51,9 @@ const recipeSlice = createSlice({
         },
         setIngredientArr(state, action) {
             state.ingredientArr = action.payload;
+        },
+        setisSearchingRecipesByIngredients(state){
+            state.isSearchingRecipesByIngredients = false;
         }
     },
     extraReducers: (builder) => {

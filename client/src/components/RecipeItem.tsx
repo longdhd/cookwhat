@@ -26,9 +26,8 @@ export default function RecipeItem({ recipe }: RecipeItemProps) {
                     {recipe.desc}
                 </Typography>
             </CardContent>
-            <CardActions>
-                <Button size="small">Share</Button>
-                <Button size="small">Learn More</Button>
+            <CardActions sx={{justifyContent:'flex-end', width:'100%'}}>
+                <Button size="small" sx={{background:'#8F030C'}} variant='contained'>Learn More</Button>
             </CardActions>
         </Card>
     );

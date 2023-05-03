@@ -16,8 +16,8 @@ const useStyles = makeStyles(() => (
       height: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
-      padding: '24px 48px',
+      alignItems: 'flex-start',
+      padding: '40px 48px',
     },
   })
 ))
@@ -58,19 +58,19 @@ export default function RecipesPage(props: RecipesPageProps) {
     } else {
       setRecipes(recipeList);
     }
-  }, [dispatch, isSearchingRecipesByIngredients, location.search, recipeList])
+  }, [dispatch, isSearchingRecipesByIngredients, location.search])
 
   return (
     <Box className={classes.root}>
       {!isSearchingRecipesByIngredients && <>
-        <Typography variant='h4' sx={{ mt: 4 }}>{title}</Typography>
-        <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px' }}>{desc}</Typography>
+        <Typography variant='h4'>{title}</Typography>
+        <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px'}}>{desc}</Typography>
       </>}
       {isSearchingRecipesByIngredients && <>
         <Typography variant='h4' sx={{ mt: 4 }}>Tìm món ăn bằng nguyên liệu: </Typography>
         <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px', display:'flex', alignItems:'center', gap: 2 }}>
           {ingredientArray.map(item => (
-            <div style={{background:'#067A91', border: '1px solid #fff', borderRadius: '4px', padding:'0 10px', height:'36px', display:'flex', alignItems:'center', color:'#fff'}}><span>{item.title.concat(' ')}</span></div>
+            <div style={{background:'#1976d2', border: '1px solid #fff', borderRadius: '4px', padding:'0 10px', height:'36px', display:'flex', alignItems:'center', color:'#fff'}}><span>{item.title.concat(' ')}</span></div>
           ))}
         </Typography>
       </>}

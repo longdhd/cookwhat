@@ -2,7 +2,7 @@ import useAutocomplete, { AutocompleteGetTagProps } from '@mui/base/useAutocompl
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import CloseIcon from '@mui/icons-material/Close';
-import { Button } from '@mui/material';
+import { Button, Collapse } from '@mui/material';
 import { autocompleteClasses } from '@mui/material/Autocomplete';
 import Slide from '@mui/material/Slide';
 import { styled } from '@mui/material/styles';
@@ -10,45 +10,61 @@ import { Schema } from 'mongoose';
 import { KeyboardEvent, useState } from 'react';
 import { Ingredient } from '../models';
 import SearchIcon from '@mui/icons-material/Search';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 const Root = styled('div')(
   ({ theme }) => `
   color: ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,.85)'
     };
   font-size: 14px;
+
+  > div > button {
+    background: #8F030C;
+    transition: background 0.4s ease-in;
+    width: 480px;
+    text-transform: capitalize;
+    cursor: default;
+      &:hover {
+        background: #8F030C;
+      }
+
+      @media only screen and (max-width: 412px){
+        width: 360px;
+      }
+  }
 `,
 );
 
 const Label = styled('label')`
-  padding: 0 0 4px;
   line-height: 1.5;
   display: block;
-  margin-bottom: 16px;
   font-size: 1.5rem;
-  color: white;
+  color: #fff;
+  cursor: pointer;
 `;
 
 const InputWrapper = styled('div')(
   ({ theme }) => `
   width: 480px;
-  border: 1px solid ${theme.palette.mode === 'dark' ? '#434343' : '#d9d9d9'};
+  // border: 1px solid ${theme.palette.mode === 'dark' ? '#434343' : '#d9d9d9'};
   background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
   border-radius: 4px;
   padding: 1px;
   display: flex;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
+  margin-top: 12px;
 
   @media only screen and (max-width: 412px){
     width: 360px;
   }
 
   &:hover {
-    border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#40a9ff'};
+    // border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#8F030C'};
   }
 
   &.focused {
-    border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#40a9ff'};
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    // border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#8F030C'};
+    // box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
   }
 
   & input {
@@ -76,6 +92,9 @@ const InputWrapper = styled('div')(
     }
   }
 
+  & button:hover  {
+    background-color: transparent;
+  }
 `,
 );
 
@@ -131,19 +150,31 @@ const StyledTag = styled(Tag)<TagProps>(
 const Listbox = styled('ul')(
   ({ theme }) => `
   width: 480px;
-  margin: 8px 0 0;
+  margin: -4px 0 0;
   padding: 0;
   position: absolute;
   list-style: none;
   background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
   overflow: auto;
   max-height: 250px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 1;
 
   @media only screen and (max-width: 412px){
     width: 360px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #8F030C;
+    border: 4px solid transparent;
+    border-radius: 8px;
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar {
+    width: 16px;
   }
 
   & li {
@@ -214,26 +245,26 @@ export default function CustomizedHook({ searchOptions, onSearch }: CustomizedHo
     isOptionEqualToValue: (option, value) => option.title === value.title,
     getOptionLabel: (option) => option.title,
     onChange: (event, value) => handleChange(event, value),
+    disableCloseOnSelect: true
   });
   const [ingredients, setIngredients] = useState<Ingredient[]>();
-
   const Suggestion = () => {
     return (
-      <Slide timeout={300} direction="up" in={focused} mountOnEnter unmountOnExit>
-        <Listbox {...getListboxProps()}>
-          {(groupedOptions as typeof searchOptions)
-            //Render autocomplete list
-            .map((option, index) => (
-              <li {...getOptionProps({ option, index })}>
-                <span>{option.title}</span>
-                <img src={option.img} height={50} width={50} style={{
-                  objectFit: 'cover'
-                }} alt={option.title} />
-                {!value.includes(option) ? <CheckIcon fontSize="small" sx={{ marginLeft: 1 }} /> : <ClearIcon fontSize="small" sx={{ marginLeft: 1 }} />}
-              </li>
-            ))}
-        </Listbox>
-      </Slide>
+      // <Slide timeout={300} direction="up" in={focused} mountOnEnter unmountOnExit>
+      <Listbox {...getListboxProps()}>
+        {(groupedOptions as typeof searchOptions)
+          //Render autocomplete list
+          .map((option, index) => (
+            <li {...getOptionProps({ option, index })}>
+              <span>{option.title}</span>
+              <img src={option.img} height={50} width={50} style={{
+                objectFit: 'cover'
+              }} alt={option.title} />
+              {!value.includes(option) ? <CheckIcon fontSize="small" sx={{ marginLeft: 1 }} /> : <ClearIcon fontSize="small" sx={{ marginLeft: 1 }} />}
+            </li>
+          ))}
+      </Listbox>
+      // </Slide>
     )
   }
 
@@ -258,13 +289,21 @@ export default function CustomizedHook({ searchOptions, onSearch }: CustomizedHo
   return (
     <Root>
       <div {...getRootProps()}>
-        <Label {...getInputLabelProps()}>Tìm món ăn bằng nguyên liệu:</Label>
+        <Button>
+          <Label {...getInputLabelProps()} sx={{
+            fontSize:{
+              xs: 16,
+              md: '1.5rem'
+            },
+            letterSpacing: 2
+          }}>Find Recipes By Ingredients</Label>
+        </Button>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
           {value.map((option: Ingredient, index: number) => (
             <StyledTag label={option.title} {...getTagProps({ index })} />
           ))}
-          <input {...getInputProps()} placeholder={!focused && value.length < 1 ? 'thịt, đậu, rau củ etc.' : ''} onKeyDown={handleEnterDown} />
-          <Button onClick={handleSubmit}><SearchIcon /></Button>
+          <input {...getInputProps()} placeholder={!focused && value.length < 1 ? 'beef, beans, veggies etc.' : ''} onKeyDown={handleEnterDown} />
+          <Button onClick={handleSubmit}><SearchIcon sx={{ color: '#8F030C' }} /></Button>
         </InputWrapper>
       </div>
       {groupedOptions.length > 0 ?
