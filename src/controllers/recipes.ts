@@ -76,11 +76,12 @@ interface CreateRecipeBody {
     title?: string,
     img?: string,
     ingredients?: Ingredient[],
-    desc?: string
+    desc?: string,
+    duration?: number,
 }
 
 export const createRecipe: RequestHandler<unknown, unknown, CreateRecipeBody, unknown> = async (req, res, next) => {
-    const { title, img, ingredients, desc } = req.body;
+    const { title, img, ingredients, desc, duration } = req.body;
 
     try {
 
@@ -96,11 +97,16 @@ export const createRecipe: RequestHandler<unknown, unknown, CreateRecipeBody, un
             throw createHttpError(400, "Recipe must have desriptions");
         }
 
+        if (!duration) {
+            throw createHttpError(400, "Recipe must have duration");
+        }
+
         const newRecipe = await RecipeModel.create({
             title: title,
             img: img,
             ingredients: ingredients,
-            desc: desc
+            desc: desc,
+            duration: duration
         });
         res.status(201).json(newRecipe);
     } catch (error) {

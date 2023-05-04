@@ -16,12 +16,12 @@ const useStyles = makeStyles(() => (
       height: '100%',
       position: 'relative',
       padding: '40px 7.5%',
-      color: '#C5CAD0',
+      color: '#f6f7f9',
       letterSpacing: 2,
       '&::before': {
         content: '""',
         position: 'absolute',
-        backgroundColor: '#CECFD0',
+        backgroundColor: '#f6f7f9',
         width: '85%',
         height: '1px',
         top: '16px',
@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => (
       '&::before': {
         content: '""',
         position: 'absolute',
-        backgroundColor: '#CECFD0',
+        backgroundColor: '#f6f7f9',
         width: '85%',
         height: '1px',
         top: '88px',
@@ -46,7 +46,7 @@ const useStyles = makeStyles(() => (
       '& > h6': {
         marginTop: '36px',
         borderRadius:'8px',
-        background:'#CECFD0',
+        background:'#f6f7f9',
         padding:'3px',
         color:'#000'
       },
@@ -54,7 +54,7 @@ const useStyles = makeStyles(() => (
         fill: '#000'
       },
       '& path': {
-        fill: '#C5CAD0'
+        fill: '#f6f7f9'
       }
     }
   }
@@ -77,7 +77,7 @@ export default function Sidebar() {
           <AccessTimeFilledIcon />DURATION {showDuration ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showDuration}>
-          <FormGroup sx={{border:'1px solid #CECFD0', padding:'8px', mt:2}}>
+          <FormGroup sx={{border:'1px solid #f6f7f9', padding:'8px', mt:2}}>
             <FormControlLabel control={<Checkbox color="default" defaultChecked />} label="< 15 mins" />
             <FormControlLabel control={<Checkbox color="default" />} label="15 - 30 mins" />
             <FormControlLabel control={<Checkbox color="default" />} label="More than 30 mins" />
@@ -89,7 +89,7 @@ export default function Sidebar() {
           <LunchDiningIcon />MEALS {showMeals ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showMeals}>
-          <FormGroup sx={{border:'1px solid #CECFD0', padding:'8px', mt:2}}>
+          <FormGroup sx={{border:'1px solid #f6f7f9', padding:'8px', mt:2}}>
             <FormControlLabel control={<Checkbox color="default" defaultChecked />} label="Breakfast & Brunch" />
             <FormControlLabel control={<Checkbox color="default" />} label="Lunch" />
             <FormControlLabel control={<Checkbox color="default" />} label="Dinner" />
@@ -104,7 +104,7 @@ export default function Sidebar() {
           <TravelExploreIcon />CUISINE {showCuisine ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showCuisine}>
-          <FormGroup sx={{border:'1px solid #CECFD0', padding:'8px', mt:2}}>
+          <FormGroup sx={{border:'1px solid #f6f7f9', padding:'8px', mt:2}}>
             <FormControlLabel control={<Checkbox color="default" defaultChecked />} label="Japanese" />
             <FormControlLabel control={<Checkbox color="default" />} label="Vietnamese" />
             <FormControlLabel control={<Checkbox color="default" />} label="Chinese" />

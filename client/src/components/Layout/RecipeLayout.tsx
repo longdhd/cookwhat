@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => (
         main: {
             gridArea: 'main',
             borderTopLeftRadius:'16px',
-            background:'#E1E1E3'
+            background:'#f6f7f9'
         },
         sidebarContainer: {
             gridArea:'sidebar',

@@ -4,5 +4,6 @@ export interface Recipe {
     title: string,
     img: string,
     ingredients: Ingredient[],
-    desc: string
+    desc: string,
+    duration: number
 }

@@ -4,8 +4,9 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hook';
+import LoadingLottie from '../components/LoadingLottie';
 import RecipeItem from '../components/RecipeItem';
-import { getRecipes, selectIngredientArray, selectRecipeList, seletIsSearchingRecipesByIngredients } from '../features/recipes/recipeSlice';
+import { getRecipes, selectIngredientArray, selectRecipeList, selectRecipeLoading, seletIsSearchingRecipesByIngredients } from '../features/recipes/recipeSlice';
 import { Ingredient, Recipe } from '../models';
 
 export interface RecipesPageProps {
@@ -38,6 +39,7 @@ export default function RecipesPage(props: RecipesPageProps) {
   const isSearchingRecipesByIngredients = useAppSelector(seletIsSearchingRecipesByIngredients);
   const ingredientArray = useAppSelector(selectIngredientArray);
   const recipeList = useAppSelector(selectRecipeList);
+  const isLoading = useAppSelector(selectRecipeLoading);
 
   useEffect(() => {
 
@@ -64,23 +66,25 @@ export default function RecipesPage(props: RecipesPageProps) {
     <Box className={classes.root}>
       {!isSearchingRecipesByIngredients && <>
         <Typography variant='h4'>{title}</Typography>
-        <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px'}}>{desc}</Typography>
+        <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px' }}>{desc}</Typography>
       </>}
       {isSearchingRecipesByIngredients && <>
         <Typography variant='h4' sx={{ mt: 4 }}>Tìm món ăn bằng nguyên liệu: </Typography>
-        <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px', display:'flex', alignItems:'center', gap: 2 }}>
+        <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px', display: 'flex', alignItems: 'center', gap: 2 }}>
           {ingredientArray.map(item => (
-            <div style={{background:'#1976d2', border: '1px solid #fff', borderRadius: '4px', padding:'0 10px', height:'36px', display:'flex', alignItems:'center', color:'#fff'}}><span>{item.title.concat(' ')}</span></div>
+            <div style={{ background: '#1976d2', border: '1px solid #fff', borderRadius: '4px', padding: '0 10px', height: '36px', display: 'flex', alignItems: 'center', color: '#fff' }}><span>{item.title.concat(' ')}</span></div>
           ))}
         </Typography>
       </>}
-      <Grid container spacing={4} sx={{ mt: 4, pb: 4 }}>
+      {!isLoading 
+      ? <Grid container spacing={4} sx={{ mt: 4, pb: 4 }}>
         {recipes && recipes.map(repcipe => (
           <Grid item xs={12} md={6} lg={3} key={repcipe.title}>
             <RecipeItem recipe={repcipe} />
           </Grid>
         ))}
       </Grid>
+      : <Box sx={{height:'100%', width:'100%', display:'flex'}}><LoadingLottie /></Box>}
     </Box>
   );
 }

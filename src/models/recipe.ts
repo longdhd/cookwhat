@@ -5,6 +5,7 @@ const recipeSchema = new Schema({
     img: { type: String },
     ingredients: {type: [Schema.Types.ObjectId], required: true, ref: 'Ingredient'},
     desc: { type: String, required: true },
+    duration: {type: Number, required: true}
 }, { timestamps: true })
 
 type Recipe = InferSchemaType<typeof recipeSchema>;
