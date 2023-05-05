@@ -250,7 +250,6 @@ export default function CustomizedHook({ searchOptions, onSearch }: CustomizedHo
   const [ingredients, setIngredients] = useState<Ingredient[]>();
   const Suggestion = () => {
     return (
-      // <Slide timeout={300} direction="up" in={focused} mountOnEnter unmountOnExit>
       <Listbox {...getListboxProps()}>
         {(groupedOptions as typeof searchOptions)
           //Render autocomplete list
@@ -264,14 +263,12 @@ export default function CustomizedHook({ searchOptions, onSearch }: CustomizedHo
             </li>
           ))}
       </Listbox>
-      // </Slide>
     )
   }
 
   const handleChange = (event: React.SyntheticEvent<Element, Event>, value: Ingredient[]) => {
     event.preventDefault();
     setIngredients(value);
-    console.log(value);
   }
 
   const handleEnterDown = (e: KeyboardEvent) => {

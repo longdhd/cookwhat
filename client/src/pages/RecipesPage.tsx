@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Button, Collapse, Grid, Typography } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
@@ -6,85 +6,76 @@ import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hook';
 import LoadingLottie from '../components/LoadingLottie';
 import RecipeItem from '../components/RecipeItem';
-import { getRecipes, selectIngredientArray, selectRecipeList, selectRecipeLoading, seletIsSearchingRecipesByIngredients } from '../features/recipes/recipeSlice';
-import { Ingredient, Recipe } from '../models';
+import { getRecipes, getRecipesByIngredients, selectIngredientArray, selectRecipeFilter, selectRecipeList, selectRecipeLoading, seletIsSearchingRecipesByIngredients } from '../features/recipes/recipeSlice';
+import { Recipe } from '../models';
 
 export interface RecipesPageProps {
 }
 const useStyles = makeStyles(() => (
   createStyles({
     root: {
-      height: '100vh',
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
       padding: '40px 48px',
+      oveflow: 'hidden'
     },
   })
 ))
 
-const routes = [
-  { route: "", query: { _sort: "updateAt" }, title: "Khám phá tất cả công thức", desc: "Hôm nay ăn gì? Tìm kiếm câu trả lời cho câu hỏi này với các công thức nấu ăn." },
-  { route: "?_sort=most-picked", query: { _sort: "title" }, title: "Khám phá công thức yêu thích nhất", desc: "Khám phá hàng trăm công thức nấu ăn nhanh và dễ dàng được xếp hạng hàng đầu cho bữa sáng, bữa trưa và bữa tối." },
-  { route: "?_sort=recommended", query: { _sort: "img" }, title: "Khám phá công thức AI giới thiệu", desc: "Hôm nay ăn gì? Hãy để AI giúp bạn tìm kiếm công thức phù hợp với thời tiết, thời điểm trong ngày" }
-]
-
 export default function RecipesPage(props: RecipesPageProps) {
   const classes = useStyles();
-  const location = useLocation();
   const dispatch = useAppDispatch();
-  const [title, setTitle] = useState("Khám phá tất cả công thức");
-  const [desc, setDesc] = useState("Hôm nay ăn gì? Tìm kiếm câu trả lời cho câu hỏi này với các công thức nấu ăn.");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const isSearchingRecipesByIngredients = useAppSelector(seletIsSearchingRecipesByIngredients);
   const ingredientArray = useAppSelector(selectIngredientArray);
-  const recipeList = useAppSelector(selectRecipeList);
+  const filter = useAppSelector(selectRecipeFilter);
   const isLoading = useAppSelector(selectRecipeLoading);
 
   useEffect(() => {
 
-    const fetchData = async (locationSearch: string) => {
-      const location = routes.find(route => route.route === locationSearch);
-
-      if (location) {
-        const result = await dispatch(getRecipes(location.query));
+    const fetchData = async () => {
+      if (!isSearchingRecipesByIngredients) {
+        const result = await dispatch(getRecipes(filter));
         const response = unwrapResult(result);
-        setTitle(location.title);
-        setDesc(location.desc);
-        setRecipes(response)
+        setRecipes(response);
+      } else {
+        const result = await dispatch(getRecipesByIngredients());
+        const response = unwrapResult(result);
+        setRecipes(response);
       }
     }
 
-    if (!isSearchingRecipesByIngredients) {
-      fetchData(location.search);
-    } else {
-      setRecipes(recipeList);
-    }
-  }, [dispatch, isSearchingRecipesByIngredients, location.search])
+    fetchData();
+  }, [dispatch, filter, isSearchingRecipesByIngredients])
 
   return (
     <Box className={classes.root}>
-      {!isSearchingRecipesByIngredients && <>
-        <Typography variant='h4'>{title}</Typography>
-        <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px' }}>{desc}</Typography>
-      </>}
-      {isSearchingRecipesByIngredients && <>
-        <Typography variant='h4' sx={{ mt: 4 }}>Tìm món ăn bằng nguyên liệu: </Typography>
-        <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px', display: 'flex', alignItems: 'center', gap: 2 }}>
-          {ingredientArray.map(item => (
-            <div style={{ background: '#1976d2', border: '1px solid #fff', borderRadius: '4px', padding: '0 10px', height: '36px', display: 'flex', alignItems: 'center', color: '#fff' }}><span>{item.title.concat(' ')}</span></div>
-          ))}
-        </Typography>
-      </>}
-      {!isLoading 
-      ? <Grid container spacing={4} sx={{ mt: 4, pb: 4 }}>
-        {recipes && recipes.map(repcipe => (
-          <Grid item xs={12} md={6} lg={3} key={repcipe.title}>
-            <RecipeItem recipe={repcipe} />
-          </Grid>
-        ))}
-      </Grid>
-      : <Box sx={{height:'100%', width:'100%', display:'flex'}}><LoadingLottie /></Box>}
+      {!isSearchingRecipesByIngredients
+        ? <>
+          <Typography variant='h4'>Khám phá tất cả công thức</Typography>
+          <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px' }}>Hôm nay ăn gì? Tìm kiếm câu trả lời cho câu hỏi này với các công thức nấu ăn.</Typography>
+        </>
+        : <>
+          <Typography variant='h4' sx={{ mt: 4 }}>Tìm món ăn bằng nguyên liệu: </Typography>
+          <Typography sx={{ mt: 2, fontFamily: 'Noto Sans Medium', fontSize: '18px', display: 'flex', alignItems: 'center', gap: 2 }}>
+            {ingredientArray.map(item => (
+              <div style={{ background: '#1976d2', border: '1px solid #fff', borderRadius: '4px', padding: '0 10px', height: '36px', display: 'flex', alignItems: 'center', color: '#fff' }}><span>{item.title.concat(' ')}</span></div>
+            ))}
+          </Typography>
+        </>
+      }
+      {!isLoading
+        ? <Grid container spacing={4} sx={{ mt: 2, pb: 4 }}>
+          {recipes && recipes.map(
+            (recipe, idx) =>
+              <Grid item xs={12} md={6} lg={4} xl={3} key={idx}>
+                <RecipeItem recipe={recipe} />
+              </Grid>
+          )}
+        </Grid>
+        : <Box sx={{ height: '100%', width: '100%', display: 'flex' }}><LoadingLottie /></Box>}
     </Box>
   );
 }

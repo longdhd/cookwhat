@@ -44,7 +44,7 @@ export const getRecipesByIngredients: RequestHandler<unknown, any[], GetRecipesB
             throw createHttpError(400, "Request must have ingredients");
         }
 
-        const recipes = await RecipeModel.find({ ingredients: { $in: ingredientsArr } }).populate('title').exec();
+        const recipes = await RecipeModel.find({ ingredients: { $in: ingredientsArr } }).populate('ingredients', 'title').exec();
 
         res.status(200).json(recipes);
     } catch (error) {

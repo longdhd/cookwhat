@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => (
             height: '100%',
             width: '100%',
             position: 'relative',
-            overflow: 'auto',
+            overflow: 'hidden',
             display: 'grid',
             gridTemplateRows: 'auto 1fr',
             gridTemplateColumns: '360px 1fr',
@@ -24,11 +24,13 @@ const useStyles = makeStyles(() => (
         main: {
             gridArea: 'main',
             borderTopLeftRadius:'16px',
-            background:'#f6f7f9'
+            background:'#f6f7f9',
+            height:'100%',
+            overflow:'auto'
         },
         sidebarContainer: {
             gridArea:'sidebar',
-            background:'#E1E1E3',
+            background:'#f6f7f9',
         },
         sidebar: {
             borderBottomRightRadius:'16px',

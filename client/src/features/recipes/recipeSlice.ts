@@ -33,10 +33,10 @@ export const getRecipes = createAsyncThunk('recipe/getRecipes',
     }
 )
 
-export const getRecipesByIngredients = createAsyncThunk('recipe/getRecipesByIngredients',
-    async (ingredientArray: Ingredient[], thunkApi) => {
-        thunkApi.dispatch(recipeActions.setIngredientArr(ingredientArray));
-        const ingredientArr = ingredientArray.map(item => item._id);
+export const getRecipesByIngredients = createAsyncThunk<Recipe[], undefined, { state: RootState }>('recipe/getRecipesByIngredients',
+    async (_, thunkApi) => {
+        const state = thunkApi.getState();
+        const ingredientArr: Schema.Types.ObjectId[] = state.recipe.ingredientArr.map(item => item._id);
         const recipes = await recipeApi.getRecipesByIngredients(ingredientArr);
         return recipes;
     }
@@ -51,8 +51,9 @@ const recipeSlice = createSlice({
         },
         setIngredientArr(state, action) {
             state.ingredientArr = action.payload;
+            state.isSearchingRecipesByIngredients = true;
         },
-        setisSearchingRecipesByIngredients(state){
+        setisSearchingRecipesByIngredients(state) {
             state.isSearchingRecipesByIngredients = false;
         }
     },
@@ -71,7 +72,6 @@ const recipeSlice = createSlice({
                 state.error = action.error.message || "";
             })
             .addCase(getRecipesByIngredients.fulfilled, (state: RecipeState, action) => {
-                state.isSearchingRecipesByIngredients = true;
                 state.list = action.payload;
             })
     }

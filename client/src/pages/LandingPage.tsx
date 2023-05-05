@@ -1,13 +1,15 @@
 import { Box, Button, Typography } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import ingredientApi from '../api/ingredientApi';
 import logo from '../assets/images/logo.png'
 import SearchBar from '../components/SearchBar';
 import { Ingredient } from '../models';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { Theme } from '@mui/system';
+import { useAppDispatch } from '../app/hook';
+import { recipeActions } from '../features/recipes/recipeSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 backgroundPosition: '40% 0%',
             },
             backgroundRepeat: 'no-repeat',
-            overflow:'auto',
+            overflow: 'auto',
             '&:after':
             {
                 content: "",
@@ -73,6 +75,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function LandingPage() {
     const classes = useStyles();
     const [searchOptions, setSearchOptions] = useState<Ingredient[]>([]);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -82,6 +86,11 @@ export default function LandingPage() {
 
         fetchData();
     }, [])
+
+    const handleSearch = async (ingredientArr: Ingredient[]) => {
+        await dispatch(recipeActions.setIngredientArr(ingredientArr));
+        navigate("/recipes");
+    }
 
     return (
         <Box className={classes.root}>
@@ -123,7 +132,7 @@ export default function LandingPage() {
                             md: '48px'
                         }
                     }}>
-                        <SearchBar searchOptions={searchOptions} />
+                        <SearchBar searchOptions={searchOptions} onSearch={handleSearch} />
                         <NavLink to='/recipes' style={{ color: '#83200D', fontSize: '24px', textDecoration: 'none' }}>
                             <Typography variant="h5" sx={{
                                 mt: 4, display: 'flex', alignItems: 'center', fontSize: {
