@@ -6,5 +6,7 @@ export interface ListResponse<T> {
 
 export interface ListParams{
     _sort?: string,
-    _order?: number
+    _order?: number,
+
+    [key: string]: any
 }

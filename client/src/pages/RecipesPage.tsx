@@ -1,13 +1,14 @@
-import { Box, Button, Collapse, Grid, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hook';
 import LoadingLottie from '../components/LoadingLottie';
-import RecipeItem from '../components/RecipeItem';
-import { getRecipes, getRecipesByIngredients, selectIngredientArray, selectRecipeFilter, selectRecipeList, selectRecipeLoading, seletIsSearchingRecipesByIngredients } from '../features/recipes/recipeSlice';
+import RecipeList from '../components/RecipeList';
+import RecipeSearchSort from '../components/RecipeSearchSort';
+import { debouncedGetRecipes, getRecipes, getRecipesByIngredients, selectIngredientArray, selectRecipeFilter, selectRecipeList, selectRecipeLoading, seletIsSearchingRecipesByIngredients } from '../features/recipes/recipeSlice';
 import { Recipe } from '../models';
+import { ListParams } from '../models/index';
 
 export interface RecipesPageProps {
 }
@@ -15,9 +16,7 @@ const useStyles = makeStyles(() => (
   createStyles({
     root: {
       height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
+      width: '100%',
       padding: '40px 48px',
       oveflow: 'hidden'
     },
@@ -27,7 +26,7 @@ const useStyles = makeStyles(() => (
 export default function RecipesPage(props: RecipesPageProps) {
   const classes = useStyles();
   const dispatch = useAppDispatch();
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const recipes = useAppSelector(selectRecipeList);
   const isSearchingRecipesByIngredients = useAppSelector(seletIsSearchingRecipesByIngredients);
   const ingredientArray = useAppSelector(selectIngredientArray);
   const filter = useAppSelector(selectRecipeFilter);
@@ -37,18 +36,18 @@ export default function RecipesPage(props: RecipesPageProps) {
 
     const fetchData = async () => {
       if (!isSearchingRecipesByIngredients) {
-        const result = await dispatch(getRecipes(filter));
-        const response = unwrapResult(result);
-        setRecipes(response);
+        dispatch(getRecipes(filter));
       } else {
-        const result = await dispatch(getRecipesByIngredients());
-        const response = unwrapResult(result);
-        setRecipes(response);
+        dispatch(getRecipesByIngredients());
       }
     }
 
     fetchData();
   }, [dispatch, filter, isSearchingRecipesByIngredients])
+
+  const handleSearchChange = (filter: ListParams) => {
+    dispatch(debouncedGetRecipes(filter));
+  }
 
   return (
     <Box className={classes.root}>
@@ -66,16 +65,9 @@ export default function RecipesPage(props: RecipesPageProps) {
           </Typography>
         </>
       }
-      {!isLoading
-        ? <Grid container spacing={4} sx={{ mt: 2, pb: 4 }}>
-          {recipes && recipes.map(
-            (recipe, idx) =>
-              <Grid item xs={12} md={6} lg={4} xl={3} key={idx}>
-                <RecipeItem recipe={recipe} />
-              </Grid>
-          )}
-        </Grid>
-        : <Box sx={{ height: '100%', width: '100%', display: 'flex' }}><LoadingLottie /></Box>}
+      <RecipeSearchSort filter={filter} onSearchChange={handleSearchChange} />
+      {isLoading && <Box sx={{ height: '100%', width: '100%', display: 'flex' }}><LoadingLottie /></Box>}
+      <RecipeList recipeList={recipes} />
     </Box>
   );
 }

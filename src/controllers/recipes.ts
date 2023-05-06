@@ -10,16 +10,18 @@ interface Ingredient {
 
 export const getRecipes: RequestHandler = async (req, res, next) => {
     try {
-        const { _page = 1, _limit = 10, _order = 1 } = req.query;
+        const { _page = 1, _limit = 10, _order = 1, title_like = '' } = req.query;
         const _sort =
             (req.query._sort && _order)
                 ? Object.fromEntries([[req.query._sort, Number(_order)]])
                 : { "createAt": 1 };
 
-        console.log(_sort);
-
+        // console.log("sort", _sort);
+        // console.log("title like", title_like);
+        console.log("req.query", req.query);
         const recipes = await RecipeModel
-            .find()
+            .find({ title: { $regex: title_like, $options: 'i' } })
+            .collation({ locale: "vi", strength: 1 })
             .populate('ingredients', 'title')
             .sort(_sort)
             .limit(Number(_limit) * 1)

@@ -4,6 +4,7 @@ import { Schema } from 'mongoose'
 import recipeApi from '../../api/recipeApi'
 import type { RootState } from '../../app/store'
 import { Ingredient, ListParams, Recipe } from '../../models'
+import _ from 'lodash';
 
 interface RecipeState {
     loading: boolean,
@@ -33,6 +34,9 @@ export const getRecipes = createAsyncThunk('recipe/getRecipes',
     }
 )
 
+const debounced = _.debounce((arg, dispatch) => dispatch(getRecipes(arg)), 500);
+export const debouncedGetRecipes = (arg) => (dispatch) => debounced(arg, dispatch);
+
 export const getRecipesByIngredients = createAsyncThunk<Recipe[], undefined, { state: RootState }>('recipe/getRecipesByIngredients',
     async (_, thunkApi) => {
         const state = thunkApi.getState();
@@ -52,16 +56,12 @@ const recipeSlice = createSlice({
         setIngredientArr(state, action) {
             state.ingredientArr = action.payload;
             state.isSearchingRecipesByIngredients = true;
-        },
-        setisSearchingRecipesByIngredients(state) {
-            state.isSearchingRecipesByIngredients = false;
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(getRecipes.pending, (state) => {
                 state.loading = true;
-                state.isSearchingRecipesByIngredients = false;
             })
             .addCase(getRecipes.fulfilled, (state: RecipeState, action) => {
                 state.loading = false;

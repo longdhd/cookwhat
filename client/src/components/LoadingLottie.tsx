@@ -24,7 +24,7 @@ export default function LoadingLottie() {
                     loop
                     animationData={lottieJson}
                     play
-                    style={{ width: 300, height: 300 }}
+                    style={{ width: 360, height: 360 }}
                 />
             </Box>
         </Box>)

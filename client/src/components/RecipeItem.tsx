@@ -80,7 +80,7 @@ export default function RecipeItem({ recipe }: RecipeItemProps) {
                 <Box className={classes.cardImgHoverText}>
                     <Typography variant='subtitle1' sx={{ color: '#fff', fontFamily: 'Noto Sans Medium' }}>
                         {recipe.ingredients.map(item => (
-                            <span>{item.title},&nbsp;</span>
+                            <span key={item.title}>{item.title},&nbsp;</span>
                         ))}
                     </Typography>
                 </Box>
