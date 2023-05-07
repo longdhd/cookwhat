@@ -22,7 +22,7 @@ const initialState: RecipeState = {
     ingredientArr: [],
     list: [],
     filter: {
-        _sort: "createAt",
+        _sort: "updatedAt",
         _order: 1
     },
     error: ""

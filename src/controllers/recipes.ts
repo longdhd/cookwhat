@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import createHttpError from 'http-errors';
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Types } from 'mongoose';
 import RecipeModel from '../models/recipe';
 interface Ingredient {
     _id: Schema.Types.ObjectId,
@@ -10,17 +10,22 @@ interface Ingredient {
 
 export const getRecipes: RequestHandler = async (req, res, next) => {
     try {
-        const { _page = 1, _limit = 10, _order = 1, title_like = '' } = req.query;
+        const {
+            _page = 1,
+            _limit = 10,
+            _order = 1,
+            title_like = ''
+        } = req.query;
+
         const _sort =
             (req.query._sort && _order)
                 ? Object.fromEntries([[req.query._sort, Number(_order)]])
                 : { "createdAt": 1 };
 
-        // console.log("sort", _sort);
-        // console.log("title like", title_like);
-        console.log("req.query", req.query);
         const recipes = await RecipeModel
-            .find({ title: { $regex: title_like, $options: 'i' } })
+            .find({
+                title: { $regex: title_like, $options: 'i' }
+            })
             .collation({ locale: "vi@collation=traditional", strength: 1 })
             .populate('ingredients', 'title')
             .sort(_sort)
@@ -116,57 +121,66 @@ export const createRecipe: RequestHandler<unknown, unknown, CreateRecipeBody, un
     }
 }
 
-// interface UpdateRecipeParams {
-//     recipeId: string
-// }
+interface UpdateRecipeParams {
+    recipeId: string
+}
 
-// interface UpdateRecipeBody {
-//     title?: string,
-//     img?: string,
-//     ingredients?: Ingredient[],
-//     desc?: string
-// }
+interface UpdateRecipeBody {
+    title?: string,
+    img?: string,
+    ingredients?: Types.ObjectId[],
+    desc?: string,
+    duration?: number
+}
 
-// export const updateRecipe: RequestHandler<UpdateRecipeParams, unknown, UpdateRecipeBody, unknown> = async (req, res, next) => {
-//     const recipeId = req.params.recipeId;
-//     const newTitle = req.body.title;
-//     const newImg = req.body.img;
-//     const newIngredients = req.body.ingredients;
-//     const newDesc = req.body.desc;
+export const updateRecipe: RequestHandler<UpdateRecipeParams, unknown, UpdateRecipeBody, unknown> = async (req, res, next) => {
+    const recipeId = req.params.recipeId.trim();
+    const newTitle = req.body.title;
+    const newImg = req.body.img;
+    const newIngredients = req.body.ingredients;
+    const newDesc = req.body.desc;
+    const newDuration = req.body.duration;
 
-//     try {
-//         if (!mongoose.isValidObjectId(recipeId)) {
-//             throw createHttpError(400, "Invalid note id");
-//         }
+    console.log("newIngredients", newIngredients)
 
-//         if (!newTitle) {
-//             throw createHttpError(400, "Recipe must have a title");
-//         }
+    try {
+        if (!mongoose.isValidObjectId(recipeId)) {
+            throw createHttpError(400, "Invalid note id");
+        }
 
-//         if (!newIngredients) {
-//             throw createHttpError(400, "Recipe must have ingredients");
-//         }
+        if (!newTitle) {
+            throw createHttpError(400, "Recipe must have a title");
+        }
 
-//         if (!newDesc) {
-//             throw createHttpError(400, "Recipe must have a description");
-//         }
+        if (!newIngredients) {
+            throw createHttpError(400, "Recipe must have ingredients");
+        }
 
-//         const recipeToUpdate = await RecipeModel.findById(recipeId).exec();
+        if (!newDesc) {
+            throw createHttpError(400, "Recipe must have a description");
+        }
 
-//         if (!recipeToUpdate) {
-//             throw createHttpError(404, "Recipe not found");
-//         }
+        if (!newDuration) {
+            throw createHttpError(400, "Recipe must have a duration");
+        }
 
-//         recipeToUpdate.title = newTitle;
-//         recipeToUpdate.img = newImg;
-//         recipeToUpdate.ingredients = newIngredients;
-//         recipeToUpdate.desc = newDesc;
+        const recipeToUpdate = await RecipeModel.findById(recipeId).exec();
 
-//         const updatedRecipe = recipeToUpdate.save();
+        if (!recipeToUpdate) {
+            throw createHttpError(404, "Recipe not found");
+        }
 
-//         res.status(200).json(updatedRecipe);
+        recipeToUpdate.title = newTitle;
+        recipeToUpdate.img = newImg;
+        recipeToUpdate.ingredients = newIngredients;
+        recipeToUpdate.desc = newDesc;
+        recipeToUpdate.duration = newDuration;
 
-//     } catch (error) {
-//         next(error);
-//     }
-// }
+        const updatedRecipe = recipeToUpdate.save();
+
+        res.status(200).json(updatedRecipe);
+
+    } catch (error) {
+        next(error);
+    }
+}

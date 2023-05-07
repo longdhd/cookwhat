@@ -9,6 +9,8 @@ import { useState } from 'react';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
+import { useAppSelector } from '../app/hook';
+import { selectRecipeFilter } from '../features/recipes/recipeSlice';
 
 const useStyles = makeStyles(() => (
   createStyles({
@@ -45,12 +47,12 @@ const useStyles = makeStyles(() => (
       },
       '& > h6': {
         marginTop: '36px',
-        borderRadius:'8px',
-        background:'#f6f7f9',
-        padding:'3px',
-        color:'#000'
+        borderRadius: '8px',
+        background: '#f6f7f9',
+        padding: '3px',
+        color: '#000'
       },
-      '& > h6 path':{
+      '& > h6 path': {
         fill: '#000'
       },
       '& path': {
@@ -67,6 +69,12 @@ export default function Sidebar() {
   const [showMeals, setShowMeals] = useState(true);
   const [showCuisine, setShowCuisine] = useState(true);
 
+  const filter = useAppSelector(selectRecipeFilter);
+
+  const onFilterChange = () => {
+    
+  }
+
   return (
     <Box className={classes.root}>
       <Typography variant='h5'>FILTERS</Typography>
@@ -74,10 +82,10 @@ export default function Sidebar() {
         <Typography variant='subtitle1'
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
           onClick={() => setShowDuration(!showDuration)}>
-          <AccessTimeFilledIcon />DURATION {showDuration ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
+          <AccessTimeFilledIcon />TIMING {showDuration ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showDuration}>
-          <FormGroup sx={{border:'1px solid #f6f7f9', padding:'8px', mt:2}}>
+          <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
             <FormControlLabel control={<Checkbox color="default" defaultChecked />} label="< 15 mins" />
             <FormControlLabel control={<Checkbox color="default" />} label="15 - 30 mins" />
             <FormControlLabel control={<Checkbox color="default" />} label="More than 30 mins" />
@@ -89,7 +97,7 @@ export default function Sidebar() {
           <LunchDiningIcon />MEALS {showMeals ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showMeals}>
-          <FormGroup sx={{border:'1px solid #f6f7f9', padding:'8px', mt:2}}>
+          <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
             <FormControlLabel control={<Checkbox color="default" defaultChecked />} label="Breakfast & Brunch" />
             <FormControlLabel control={<Checkbox color="default" />} label="Lunch" />
             <FormControlLabel control={<Checkbox color="default" />} label="Dinner" />
@@ -104,7 +112,7 @@ export default function Sidebar() {
           <TravelExploreIcon />CUISINE {showCuisine ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showCuisine}>
-          <FormGroup sx={{border:'1px solid #f6f7f9', padding:'8px', mt:2}}>
+          <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
             <FormControlLabel control={<Checkbox color="default" defaultChecked />} label="Japanese" />
             <FormControlLabel control={<Checkbox color="default" />} label="Vietnamese" />
             <FormControlLabel control={<Checkbox color="default" />} label="Chinese" />

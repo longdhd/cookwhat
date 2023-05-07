@@ -59,6 +59,7 @@ const useStyles = makeStyles(() => (
             bottom: '-100%',
             zIndex: 1,
             transition: 'all 0.8s ease-in-out',
+            padding:'0 8px',
         },
         button: {
             background: '#f32326 !important',
@@ -78,7 +79,7 @@ export default function RecipeItem({ recipe }: RecipeItemProps) {
                 className={classes.cardImg}
             >
                 <Box className={classes.cardImgHoverText}>
-                    <Typography variant='subtitle1' sx={{ color: '#fff', fontFamily: 'Noto Sans Medium' }}>
+                    <Typography sx={{ color: '#fff', fontFamily: 'Noto Sans Medium' }}>
                         {recipe.ingredients.map(item => (
                             <span key={item.title}>{item.title},&nbsp;</span>
                         ))}
