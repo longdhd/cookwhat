@@ -1,13 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hook';
 import LoadingLottie from '../components/LoadingLottie';
 import RecipeList from '../components/RecipeList';
 import RecipeSearchSort from '../components/RecipeSearchSort';
-import { debouncedGetRecipes, getRecipes, getRecipesByIngredients, selectIngredientArray, selectRecipeFilter, selectRecipeList, selectRecipeLoading, seletIsSearchingRecipesByIngredients } from '../features/recipes/recipeSlice';
-import { Recipe } from '../models';
+import { debouncedSetFilter, getRecipes, getRecipesByIngredients, recipeActions, selectIngredientArray, selectRecipeFilter, selectRecipeList, selectRecipeLoading, seletIsSearchingRecipesByIngredients } from '../features/recipes/recipeSlice';
 import { ListParams } from '../models/index';
 
 export interface RecipesPageProps {
@@ -18,7 +16,7 @@ const useStyles = makeStyles(() => (
       height: '100%',
       width: '100%',
       padding: '40px 48px',
-      oveflow: 'hidden'
+      oveflow: 'auto'
     },
   })
 ))
@@ -46,7 +44,11 @@ export default function RecipesPage(props: RecipesPageProps) {
   }, [dispatch, filter, isSearchingRecipesByIngredients])
 
   const handleSearchChange = (filter: ListParams) => {
-    dispatch(debouncedGetRecipes(filter));
+    dispatch(debouncedSetFilter(filter));
+  }
+
+  const handleSortChange = (filter: ListParams) => {
+    dispatch(recipeActions.setFilter(filter));
   }
 
   return (
@@ -65,9 +67,8 @@ export default function RecipesPage(props: RecipesPageProps) {
           </Typography>
         </>
       }
-      <RecipeSearchSort filter={filter} onSearchChange={handleSearchChange} />
-      {isLoading && <Box sx={{ height: '100%', width: '100%', display: 'flex' }}><LoadingLottie /></Box>}
-      <RecipeList recipeList={recipes} />
+      <RecipeSearchSort filter={filter} onSearchChange={handleSearchChange} onSortChange={handleSortChange} />
+      {isLoading ? <LoadingLottie /> : <RecipeList recipeList={recipes} />}
     </Box>
   );
 }

@@ -14,14 +14,14 @@ export const getRecipes: RequestHandler = async (req, res, next) => {
         const _sort =
             (req.query._sort && _order)
                 ? Object.fromEntries([[req.query._sort, Number(_order)]])
-                : { "createAt": 1 };
+                : { "createdAt": 1 };
 
         // console.log("sort", _sort);
         // console.log("title like", title_like);
         console.log("req.query", req.query);
         const recipes = await RecipeModel
             .find({ title: { $regex: title_like, $options: 'i' } })
-            .collation({ locale: "vi", strength: 1 })
+            .collation({ locale: "vi@collation=traditional", strength: 1 })
             .populate('ingredients', 'title')
             .sort(_sort)
             .limit(Number(_limit) * 1)

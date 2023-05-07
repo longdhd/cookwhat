@@ -12,7 +12,7 @@ export default function LoadingLottie() {
         <Box sx={{
             postion: 'relative',
             display: 'flex',
-            height: '100%',
+            height: 'fit-content',
             justifyContent: 'center',
             alignItems: 'flex-start',
             flexGrow: 1
@@ -24,7 +24,7 @@ export default function LoadingLottie() {
                     loop
                     animationData={lottieJson}
                     play
-                    style={{ width: 360, height: 360 }}
+                    style={{ width: 480, height: 480 }}
                 />
             </Box>
         </Box>)

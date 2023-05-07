@@ -5,6 +5,7 @@ import recipeApi from '../../api/recipeApi'
 import type { RootState } from '../../app/store'
 import { Ingredient, ListParams, Recipe } from '../../models'
 import _ from 'lodash';
+import { AppDispatch } from '../../app/store';
 
 interface RecipeState {
     loading: boolean,
@@ -34,8 +35,8 @@ export const getRecipes = createAsyncThunk('recipe/getRecipes',
     }
 )
 
-const debounced = _.debounce((arg, dispatch) => dispatch(getRecipes(arg)), 500);
-export const debouncedGetRecipes = (arg) => (dispatch) => debounced(arg, dispatch);
+const debounced = _.debounce((params, dispatch) => dispatch(recipeActions.setFilter(params)), 500);
+export const debouncedSetFilter = (params: ListParams) => (dispatch: AppDispatch) => debounced(params, dispatch);
 
 export const getRecipesByIngredients = createAsyncThunk<Recipe[], undefined, { state: RootState }>('recipe/getRecipesByIngredients',
     async (_, thunkApi) => {
