@@ -1,16 +1,16 @@
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, Collapse, Typography } from '@mui/material';
+import { Box, Collapse, Typography, FormGroup } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
+import FormControl from '@mui/material/FormControl';
 import { createStyles, makeStyles } from '@mui/styles';
-import { useState } from 'react';
+import { ChangeEvent, useState, FormEvent, useEffect } from 'react';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
-import { useAppSelector } from '../app/hook';
-import { selectRecipeFilter } from '../features/recipes/recipeSlice';
+import { useAppDispatch, useAppSelector } from '../app/hook';
+import { recipeActions, selectRecipeFilter } from '../features/recipes/recipeSlice';
 
 const useStyles = makeStyles(() => (
   createStyles({
@@ -69,11 +69,30 @@ export default function Sidebar() {
   const [showMeals, setShowMeals] = useState(true);
   const [showCuisine, setShowCuisine] = useState(true);
 
+  const [duration, setDuration] = useState({
+    min: 0,
+    max: 100
+  })
+
+  const dispatch = useAppDispatch();
   const filter = useAppSelector(selectRecipeFilter);
 
-  const onFilterChange = () => {
-    
+  const handleCheck = (e: ChangeEvent<HTMLInputElement>) => {
+    const [minDuration, maxDuration] = e.target.value.split(',');
+    setDuration({
+      ...duration,
+      min: Number(minDuration) === duration.min ? 0 : Number(minDuration),
+      max: Number(maxDuration) === duration.max ? 100 : Number(maxDuration)
+    })
   }
+
+  useEffect(() => {
+    const newFilter = {
+      ...filter,
+      duration: duration
+    }
+    dispatch(recipeActions.setFilter(newFilter));
+  }, [dispatch, duration])
 
   return (
     <Box className={classes.root}>
@@ -85,11 +104,13 @@ export default function Sidebar() {
           <AccessTimeFilledIcon />TIMING {showDuration ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showDuration}>
-          <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
-            <FormControlLabel control={<Checkbox color="default" defaultChecked />} label="< 15 mins" />
-            <FormControlLabel control={<Checkbox color="default" />} label="15 - 30 mins" />
-            <FormControlLabel control={<Checkbox color="default" />} label="More than 30 mins" />
-          </FormGroup>
+          <FormControl>
+            <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
+              <FormControlLabel control={<Checkbox color="default" value={[0, 15]} checked={duration.min === 0 && duration.max === 15} onChange={handleCheck} />} label="< 15 mins" />
+              <FormControlLabel control={<Checkbox color="default" value={[15, 30]} checked={duration.min === 15 && duration.max === 30} onChange={handleCheck} />} label="15 - 30 mins" />
+              <FormControlLabel control={<Checkbox color="default" value={[30, 100]} checked={duration.min === 30 && duration.max === 100} onChange={handleCheck} />} label="More than 30 mins" />
+            </FormGroup>
+          </FormControl>
         </Collapse>
         <Typography variant='subtitle1'
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
@@ -98,7 +119,7 @@ export default function Sidebar() {
         </Typography>
         <Collapse in={showMeals}>
           <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
-            <FormControlLabel control={<Checkbox color="default" defaultChecked />} label="Breakfast & Brunch" />
+            <FormControlLabel control={<Checkbox color="default" />} label="Breakfast & Brunch" />
             <FormControlLabel control={<Checkbox color="default" />} label="Lunch" />
             <FormControlLabel control={<Checkbox color="default" />} label="Dinner" />
             <FormControlLabel control={<Checkbox color="default" />} label="Hotpot" />
@@ -113,7 +134,7 @@ export default function Sidebar() {
         </Typography>
         <Collapse in={showCuisine}>
           <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
-            <FormControlLabel control={<Checkbox color="default" defaultChecked />} label="Japanese" />
+            <FormControlLabel control={<Checkbox color="default" />} label="Japanese" />
             <FormControlLabel control={<Checkbox color="default" />} label="Vietnamese" />
             <FormControlLabel control={<Checkbox color="default" />} label="Chinese" />
             <FormControlLabel control={<Checkbox color="default" />} label="Thai" />

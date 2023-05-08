@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import createHttpError from 'http-errors';
 import mongoose, { Schema, Types } from 'mongoose';
 import RecipeModel from '../models/recipe';
@@ -8,27 +8,42 @@ interface Ingredient {
     img: string
 }
 
-export const getRecipes: RequestHandler = async (req, res, next) => {
+interface RequestQuery {
+    _page: number,
+    _limit: number,
+    _sort: string,
+    _order: 1 | -1,
+    title_like: string,
+    duration: {
+        min: number,
+        max: number
+    }
+}
+
+export const getRecipes = async (req: Request<unknown, unknown, unknown, RequestQuery>, res: Response, next: NextFunction) => {
     try {
         const {
             _page = 1,
             _limit = 10,
+            _sort = 'updatedAt',
             _order = 1,
-            title_like = ''
+            title_like = '',
+            duration = {
+                min: 0,
+                max: 100
+            }
         } = req.query;
 
-        const _sort =
-            (req.query._sort && _order)
-                ? Object.fromEntries([[req.query._sort, Number(_order)]])
-                : { "createdAt": 1 };
+        console.log(req.query.duration)
 
         const recipes = await RecipeModel
             .find({
-                title: { $regex: title_like, $options: 'i' }
+                title: { $regex: title_like, $options: 'i' },
+                duration: { $gte: duration.min, $lt: duration.max }
             })
             .collation({ locale: "vi@collation=traditional", strength: 1 })
             .populate('ingredients', 'title')
-            .sort(_sort)
+            .sort({[_sort]: _order})
             .limit(Number(_limit) * 1)
             .skip((Number(_page) - 1) * Number(_limit))
             .exec();
