@@ -74,10 +74,12 @@ export default function Sidebar() {
     max: 100
   })
 
+  const [tags, setTags] = useState<string[] | string>("All");
+
   const dispatch = useAppDispatch();
   const filter = useAppSelector(selectRecipeFilter);
 
-  const handleCheck = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleDurationCheck = (e: ChangeEvent<HTMLInputElement>) => {
     const [minDuration, maxDuration] = e.target.value.split(',');
     setDuration({
       ...duration,
@@ -86,13 +88,31 @@ export default function Sidebar() {
     })
   }
 
+  const handleTagCheck = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    if (tags.includes(value)) {
+      if (tags.length > 1)
+        setTags((state) => (state as string[]).filter(item => item !== value));
+      else
+        setTags("All");
+    } else {
+      if (Array.isArray(tags))
+        setTags([...tags, value])
+      else {
+        setTags([value])
+      }
+    }
+  }
+
   useEffect(() => {
     const newFilter = {
       ...filter,
-      duration: duration
+      duration: duration,
+      _tags: tags
     }
     dispatch(recipeActions.setFilter(newFilter));
-  }, [dispatch, duration])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, duration, tags])
 
   return (
     <Box className={classes.root}>
@@ -103,12 +123,12 @@ export default function Sidebar() {
           onClick={() => setShowDuration(!showDuration)}>
           <AccessTimeFilledIcon />TIMING {showDuration ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
-        <Collapse in={showDuration}>
-          <FormControl>
-            <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
-              <FormControlLabel control={<Checkbox color="default" value={[0, 15]} checked={duration.min === 0 && duration.max === 15} onChange={handleCheck} />} label="< 15 mins" />
-              <FormControlLabel control={<Checkbox color="default" value={[15, 30]} checked={duration.min === 15 && duration.max === 30} onChange={handleCheck} />} label="15 - 30 mins" />
-              <FormControlLabel control={<Checkbox color="default" value={[30, 100]} checked={duration.min === 30 && duration.max === 100} onChange={handleCheck} />} label="More than 30 mins" />
+        <Collapse in={showDuration} timeout={800}>
+          <FormControl sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2, width: 'inherit' }}>
+            <FormGroup>
+              <FormControlLabel control={<Checkbox color="default" value={[0, 15]} checked={duration.min === 0 && duration.max === 15} onChange={handleDurationCheck} />} label="< 15 mins" />
+              <FormControlLabel control={<Checkbox color="default" value={[15, 30]} checked={duration.min === 15 && duration.max === 30} onChange={handleDurationCheck} />} label="15 - 30 mins" />
+              <FormControlLabel control={<Checkbox color="default" value={[30, 100]} checked={duration.min === 30 && duration.max === 100} onChange={handleDurationCheck} />} label="More than 30 mins" />
             </FormGroup>
           </FormControl>
         </Collapse>
@@ -118,14 +138,16 @@ export default function Sidebar() {
           <LunchDiningIcon />MEALS {showMeals ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showMeals}>
-          <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
-            <FormControlLabel control={<Checkbox color="default" />} label="Breakfast & Brunch" />
-            <FormControlLabel control={<Checkbox color="default" />} label="Lunch" />
-            <FormControlLabel control={<Checkbox color="default" />} label="Dinner" />
-            <FormControlLabel control={<Checkbox color="default" />} label="Hotpot" />
-            <FormControlLabel control={<Checkbox color="default" />} label="Salad" />
-            <FormControlLabel control={<Checkbox color="default" />} label="Snacks & Deserts" />
-          </FormGroup>
+          <FormControl sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2, width: 'inherit' }}>
+            <FormGroup>
+              <FormControlLabel control={<Checkbox color="default" value={'Breakfast'} checked={(Array.isArray(tags) && tags.includes("Breakfast"))} onChange={handleTagCheck} />} label="Breakfast & Brunch" />
+              <FormControlLabel control={<Checkbox color="default" value={'Lunch'} checked={(Array.isArray(tags) && tags.includes("Lunch"))} onChange={handleTagCheck}/>} label="Lunch" />
+              <FormControlLabel control={<Checkbox color="default" value={'Dinner'} checked={(Array.isArray(tags) && tags.includes("Dinner"))} onChange={handleTagCheck}/>} label="Dinner" />
+              <FormControlLabel control={<Checkbox color="default" value={'Hotpot'} checked={(Array.isArray(tags) && tags.includes("Hotpot"))} onChange={handleTagCheck}/>} label="Hotpot" />
+              <FormControlLabel control={<Checkbox color="default" value={'Salad'} checked={(Array.isArray(tags) && tags.includes("Salad"))} onChange={handleTagCheck}/>} label="Salad" />
+              <FormControlLabel control={<Checkbox color="default" value={'Snacks'} checked={(Array.isArray(tags) && tags.includes("Snacks"))} onChange={handleTagCheck}/>} label="Snacks & Deserts" />
+            </FormGroup>
+          </FormControl>
         </Collapse>
         <Typography variant='subtitle1'
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
@@ -135,11 +157,11 @@ export default function Sidebar() {
         <Collapse in={showCuisine}>
           <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
             <FormControlLabel control={<Checkbox color="default" />} label="Japanese" />
-            <FormControlLabel control={<Checkbox color="default" />} label="Vietnamese" />
-            <FormControlLabel control={<Checkbox color="default" />} label="Chinese" />
-            <FormControlLabel control={<Checkbox color="default" />} label="Thai" />
-            <FormControlLabel control={<Checkbox color="default" />} label="Mexican" />
-            <FormControlLabel control={<Checkbox color="default" />} label="French" />
+            <FormControlLabel control={<Checkbox color="default" value={'Vietnamese'} checked={(Array.isArray(tags) && tags.includes("Vietnamese"))} onChange={handleTagCheck} />} label="Vietnamese" />
+            <FormControlLabel control={<Checkbox color="default" value={'Chinese'} checked={(Array.isArray(tags) && tags.includes("Chinese"))} onChange={handleTagCheck} />} label="Chinese" />
+            <FormControlLabel control={<Checkbox color="default" value={'Thai'} checked={(Array.isArray(tags) && tags.includes("Thai"))} onChange={handleTagCheck}/>} label="Thai" />
+            <FormControlLabel control={<Checkbox color="default" value={'Mexican'} checked={(Array.isArray(tags) && tags.includes("Mexican"))} onChange={handleTagCheck}/>} label="Mexican" />
+            <FormControlLabel control={<Checkbox color="default" value={'French'} checked={(Array.isArray(tags) && tags.includes("French"))} onChange={handleTagCheck}/>} label="French" />
           </FormGroup>
         </Collapse>
       </Box>

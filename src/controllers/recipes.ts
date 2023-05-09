@@ -17,7 +17,8 @@ interface RequestQuery {
     duration: {
         min: number,
         max: number
-    }
+    },
+    _tags: string | string[]
 }
 
 export const getRecipes = async (req: Request<unknown, unknown, unknown, RequestQuery>, res: Response, next: NextFunction) => {
@@ -31,19 +32,25 @@ export const getRecipes = async (req: Request<unknown, unknown, unknown, Request
             duration = {
                 min: 0,
                 max: 100
-            }
+            },
+            _tags = "All"
         } = req.query;
 
-        console.log(req.query.duration)
+        const tagOptions = ["Vietnamese", "Chinese", "Breafast", "Salad"];
+
+        const tags = _tags === "All" 
+            ? [...tagOptions]
+            : _tags
 
         const recipes = await RecipeModel
             .find({
                 title: { $regex: title_like, $options: 'i' },
-                duration: { $gte: duration.min, $lt: duration.max }
+                duration: { $gte: duration.min, $lt: duration.max },
+                tags: {$elemMatch: {$in: tags}}
             })
             .collation({ locale: "vi@collation=traditional", strength: 1 })
             .populate('ingredients', 'title')
-            .sort({[_sort]: _order})
+            .sort({ [_sort]: _order })
             .limit(Number(_limit) * 1)
             .skip((Number(_page) - 1) * Number(_limit))
             .exec();

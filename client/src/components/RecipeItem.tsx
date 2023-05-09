@@ -59,7 +59,7 @@ const useStyles = makeStyles(() => (
             bottom: '-100%',
             zIndex: 1,
             transition: 'all 0.8s ease-in-out',
-            padding:'0 8px',
+            padding: '0 8px',
         },
         button: {
             background: '#f32326 !important',
@@ -96,7 +96,9 @@ export default function RecipeItem({ recipe }: RecipeItemProps) {
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', gridArea: 'content', gap: 1 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}><AccessTimeOutlinedIcon sx={{ fill: '#000' }} />&nbsp;&nbsp;{recipe.duration} mins</Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}><LabelOutlinedIcon sx={{ fill: '#000' }} />&nbsp;&nbsp;Breakfast</Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}><LabelOutlinedIcon sx={{ fill: '#000' }} />&nbsp;&nbsp;{recipe.tags.map((item, idx) => (
+                            <span key={idx}>{item}{recipe.tags.length > 1 && idx !== recipe.tags.length - 1 ? `,` : ''}&nbsp;</span>
+                        ))}</Box>
                     </Box>
                 </Box>
             </CardContent>
