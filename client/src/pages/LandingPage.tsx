@@ -3,7 +3,7 @@ import { createStyles, makeStyles } from '@mui/styles';
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ingredientApi from '../api/ingredientApi';
-import logo from '../assets/images/logo.png'
+import logo from '../assets/images/logo.webp'
 import SearchBar from '../components/SearchBar';
 import { Ingredient } from '../models';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
             position: 'relative',
             height: '100vh',
             width: '100%',
-            background: 'url("./images/background.png")',
+            background: 'url("./images/background.webp")',
             backgroundSize: 'cover',
             [theme.breakpoints.down('sm')]: {
                 backgroundPosition: '40% 0%',
@@ -97,7 +97,7 @@ export default function LandingPage() {
             <Box className={classes.column}>
                 <Box className={classes.container}>
                     <Box className={classes.logoContainer}>
-                        <img className={classes.logo} src={logo} alt='logo'></img>
+                        <img className={classes.logo} src={logo} height={200} width={200} alt='logo'></img>
                     </Box>
 
                     <Box className={classes.intro}>

@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/logo.webp';
 
 const useStyles = makeStyles(() => (
     createStyles({

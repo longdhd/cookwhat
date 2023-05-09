@@ -39,7 +39,7 @@ export default function RecipeSearchSort({ filter, onSearchChange, onSortChange 
 
         if (inputRef.current && selectRef.current) {
             inputRef.current.value = '';
-            selectRef.current.value = 'updatedAt.1';
+            selectRef.current.value = 'createdAt.1';
         }
     }
     return (
@@ -56,7 +56,7 @@ export default function RecipeSearchSort({ filter, onSearchChange, onSortChange 
                         <FormControl fullWidth sx={{ m: 1 }} variant="filled">
                             <InputLabel id="sort-select">Sort</InputLabel>
                             <Select labelId="sort-select" onChange={handleSortChange} ref={selectRef} value={filter._sort ? `${filter._sort}.${filter._order}` : ''}>
-                                <MenuItem value="">None</MenuItem>
+                                <MenuItem value="createdAt.1">None</MenuItem>
                                 <MenuItem value="updatedAt.1">Latest</MenuItem>
                                 <MenuItem value="updatedAt.-1">Newest</MenuItem>
                             </Select>
