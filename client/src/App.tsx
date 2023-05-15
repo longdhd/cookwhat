@@ -1,13 +1,12 @@
-import React, { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-// import LoadingLottie from './components/LoadingLottie';
-// import RecipeLayout from './components/Layout/RecipeLayout';
-// import LandingPage from './pages/LandingPage';
+import mainLoader from './assets/lottie/mainLoader.json'
 
-const LazyLottie = React.lazy(() => import('./components/LoadingLottie'));
-const LazyLandingPage = React.lazy(() => import('./pages/LandingPage'));
-const LazyRecipeLayout = React.lazy(() => import('./components/Layout/RecipeLayout'))
+const LoadingLottie = lazy(() => import('./components/LoadingLottie'));
+const LazyLandingPage = lazy(() => import('./pages/LandingPage'));
+const LazyRecipeLayout = lazy(() => import('./components/Layout/RecipeLayout'));
+const LazyRecipeDetaiPage = lazy(() => import('./pages/RecipeDetailPage'));
 
 function App() {
 
@@ -15,12 +14,16 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={
-          <Suspense fallback={<LazyLottie />}>
+          <Suspense fallback={< LoadingLottie data={mainLoader} />}>
             <LazyLandingPage />
           </Suspense>} />
         <Route path="/recipes" element={
-          <Suspense fallback={<LazyLottie />}>
+          <Suspense fallback={< LoadingLottie data={mainLoader} />}>
             <LazyRecipeLayout />
+          </Suspense>} />
+        <Route path="/recipes/:recipeId" element={
+          <Suspense fallback={< LoadingLottie data={mainLoader} />}>
+            <LazyRecipeDetaiPage />
           </Suspense>} />
       </Routes>
     </BrowserRouter>

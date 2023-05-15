@@ -63,7 +63,7 @@ export default function RecipeSearchSort({ filter, onSearchChange, onSortChange 
                         </FormControl>
                     </Grid>
                     <Grid item sm={6} md={2}>
-                        <Button fullWidth onClick={handleClear}>Clear</Button>
+                        <Button fullWidth onClick={handleClear} sx={{color: '#000'}}>Clear</Button>
                     </Grid>
                 </Grid>
             </Box>

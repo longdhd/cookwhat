@@ -1,15 +1,15 @@
-import { Box, Button, Typography } from '@mui/material';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import { Box, Typography } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
+import { Theme } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ingredientApi from '../api/ingredientApi';
-import logo from '../assets/images/logo.webp'
-import SearchBar from '../components/SearchBar';
-import { Ingredient } from '../models';
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-import { Theme } from '@mui/system';
 import { useAppDispatch } from '../app/hook';
+import logo from '../assets/images/logo.webp';
+import SearchBar from '../components/SearchBar';
 import { recipeActions } from '../features/recipes/recipeSlice';
+import { Ingredient } from '../models';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

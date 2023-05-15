@@ -1,5 +1,4 @@
 import { Grid } from '@mui/material';
-import * as React from 'react';
 import { Recipe } from '../models';
 import RecipeItem from './RecipeItem';
 

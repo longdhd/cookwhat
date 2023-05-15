@@ -1,13 +1,12 @@
 import { Box } from '@mui/material'
-import React from 'react'
+import { lazy } from 'react'
+const Lottie = lazy(() => import('react-lottie-player'))
 
-import Lottie from 'react-lottie-player'
-// Alternatively:
-// import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
+interface LoadingLottieProps {
+    data: object | undefined
+}
 
-import lottieJson from '../assets/lottie/loading.json'
-
-export default function LoadingLottie() {
+export default function LoadingLottie({ data }: LoadingLottieProps) {
     return (
         <Box sx={{
             postion: 'relative',
@@ -22,9 +21,9 @@ export default function LoadingLottie() {
             }}>
                 <Lottie
                     loop
-                    animationData={lottieJson}
+                    animationData={data}
                     play
-                    style={{ width: 480, height: 480 }}
+                    style={{ width: 720, height: 720 }}
                 />
             </Box>
         </Box>)

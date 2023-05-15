@@ -4,7 +4,7 @@ import { Schema } from 'mongoose'
 import recipeApi from '../../api/recipeApi'
 import type { RootState } from '../../app/store'
 import { Ingredient, ListParams, Recipe } from '../../models'
-import _ from 'lodash';
+import debounce from 'lodash/debounce';
 import { AppDispatch } from '../../app/store';
 
 interface RecipeState {
@@ -35,7 +35,7 @@ export const getRecipes = createAsyncThunk('recipe/getRecipes',
     }
 )
 
-const debounced = _.debounce((params, dispatch) => dispatch(recipeActions.setFilter(params)), 500);
+const debounced = debounce((params, dispatch) => dispatch(recipeActions.setFilter(params)), 500);
 export const debouncedSetFilter = (params: ListParams) => (dispatch: AppDispatch) => debounced(params, dispatch);
 
 export const getRecipesByIngredients = createAsyncThunk<Recipe[], undefined, { state: RootState }>('recipe/getRecipesByIngredients',

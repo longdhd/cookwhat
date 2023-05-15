@@ -1,14 +1,15 @@
 import { Box, Typography } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
+import { Theme } from '@mui/system';
 import logo from '../assets/images/logo.webp';
 
-const useStyles = makeStyles(() => (
+const useStyles = makeStyles((theme: Theme) => (
     createStyles({
         headerContainer: {
             display: 'inline-flex',
             height: '160px',
             width: '100%',
-            background: '#2C2D30',
+            background: '#1a1618',
             padding: '0 24px',
             flexFlow:'row nowrap',
             alignItems:'center',
@@ -16,6 +17,11 @@ const useStyles = makeStyles(() => (
                 flexGrow: 1,
                 color:'#fff',
                 letterSpacing: 2
+            },
+            [theme.breakpoints.down('lg')]: {
+                '& > *:not(:nth-child(2n))':{
+                    display:'none'
+                }
             }
         },
         logo: {

@@ -1,14 +1,14 @@
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, Collapse, Typography, FormGroup } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import { createStyles, makeStyles } from '@mui/styles';
-import { ChangeEvent, useState, FormEvent, useEffect } from 'react';
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
+import { Box, Collapse, FormGroup, Typography } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { createStyles, makeStyles } from '@mui/styles';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hook';
 import { recipeActions, selectRecipeFilter } from '../features/recipes/recipeSlice';
 
@@ -18,12 +18,12 @@ const useStyles = makeStyles(() => (
       height: '100%',
       position: 'relative',
       padding: '40px 7.5%',
-      color: '#f6f7f9',
+      color: '#f4f3e6',
       letterSpacing: 2,
       '&::before': {
         content: '""',
         position: 'absolute',
-        backgroundColor: '#f6f7f9',
+        backgroundColor: '#f4f3e6',
         width: '85%',
         height: '1px',
         top: '16px',
@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => (
       '&::before': {
         content: '""',
         position: 'absolute',
-        backgroundColor: '#f6f7f9',
+        backgroundColor: '#f4f3e6',
         width: '85%',
         height: '1px',
         top: '88px',
@@ -48,7 +48,7 @@ const useStyles = makeStyles(() => (
       '& > h6': {
         marginTop: '36px',
         borderRadius: '8px',
-        background: '#f6f7f9',
+        background: '#f4f3e6',
         padding: '3px',
         color: '#000'
       },
@@ -56,7 +56,7 @@ const useStyles = makeStyles(() => (
         fill: '#000'
       },
       '& path': {
-        fill: '#f6f7f9'
+        fill: '#f4f3e6'
       }
     }
   }
@@ -124,7 +124,7 @@ export default function Sidebar() {
           <AccessTimeFilledIcon />TIMING {showDuration ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showDuration} timeout={800}>
-          <FormControl sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2, width: 'inherit' }}>
+          <FormControl sx={{ border: '1px solid #f4f3e6', padding: '8px', mt: 2, width: 'inherit' }}>
             <FormGroup>
               <FormControlLabel control={<Checkbox color="default" value={[0, 15]} checked={duration.min === 0 && duration.max === 15} onChange={handleDurationCheck} />} label="< 15 mins" />
               <FormControlLabel control={<Checkbox color="default" value={[15, 30]} checked={duration.min === 15 && duration.max === 30} onChange={handleDurationCheck} />} label="15 - 30 mins" />
@@ -138,7 +138,7 @@ export default function Sidebar() {
           <LunchDiningIcon />MEALS {showMeals ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showMeals}>
-          <FormControl sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2, width: 'inherit' }}>
+          <FormControl sx={{ border: '1px solid #f4f3e6', padding: '8px', mt: 2, width: 'inherit' }}>
             <FormGroup>
               <FormControlLabel control={<Checkbox color="default" value={'Breakfast'} checked={(Array.isArray(tags) && tags.includes("Breakfast"))} onChange={handleTagCheck} />} label="Breakfast & Brunch" />
               <FormControlLabel control={<Checkbox color="default" value={'Lunch'} checked={(Array.isArray(tags) && tags.includes("Lunch"))} onChange={handleTagCheck}/>} label="Lunch" />
@@ -155,7 +155,7 @@ export default function Sidebar() {
           <TravelExploreIcon />CUISINE {showCuisine ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="small" />}
         </Typography>
         <Collapse in={showCuisine}>
-          <FormGroup sx={{ border: '1px solid #f6f7f9', padding: '8px', mt: 2 }}>
+          <FormGroup sx={{ border: '1px solid #f4f3e6', padding: '8px', mt: 2 }}>
             <FormControlLabel control={<Checkbox color="default" />} label="Japanese" />
             <FormControlLabel control={<Checkbox color="default" value={'Vietnamese'} checked={(Array.isArray(tags) && tags.includes("Vietnamese"))} onChange={handleTagCheck} />} label="Vietnamese" />
             <FormControlLabel control={<Checkbox color="default" value={'Chinese'} checked={(Array.isArray(tags) && tags.includes("Chinese"))} onChange={handleTagCheck} />} label="Chinese" />

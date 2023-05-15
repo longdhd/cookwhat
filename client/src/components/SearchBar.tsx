@@ -2,7 +2,7 @@ import useAutocomplete, { AutocompleteGetTagProps } from '@mui/base/useAutocompl
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import CloseIcon from '@mui/icons-material/Close';
-import { Button, Collapse } from '@mui/material';
+import { Box, Button, Collapse } from '@mui/material';
 import { autocompleteClasses } from '@mui/material/Autocomplete';
 import Slide from '@mui/material/Slide';
 import { styled } from '@mui/material/styles';
@@ -18,12 +18,14 @@ const Root = styled('div')(
     };
   font-size: 14px;
 
-  > div > button {
+  > div > div:first-of-type {
     background: #8F030C;
-    transition: background 0.4s ease-in;
     width: 480px;
     text-transform: capitalize;
+    text-align: center;
     cursor: default;
+    border-radius: 4px;
+    padding: 4px;
       &:hover {
         background: #8F030C;
       }
@@ -40,7 +42,6 @@ const Label = styled('label')`
   display: block;
   font-size: 1.5rem;
   color: #fff;
-  cursor: pointer;
 `;
 
 const InputWrapper = styled('div')(
@@ -286,26 +287,26 @@ export default function CustomizedHook({ searchOptions, onSearch }: CustomizedHo
   return (
     <Root>
       <div {...getRootProps()}>
-        <Button>
+        <Box>
           <Label {...getInputLabelProps()} sx={{
-            fontSize:{
+            fontSize: {
               xs: 16,
               md: '1.5rem'
             },
             letterSpacing: 2
           }}>Find Recipes By Ingredients</Label>
-        </Button>
+        </Box>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
           {value.map((option: Ingredient, index: number) => (
             <StyledTag label={option.title} {...getTagProps({ index })} />
           ))}
           <input {...getInputProps()} placeholder={!focused && value.length < 1 ? 'beef, beans, veggies etc.' : ''} onKeyDown={handleEnterDown} />
-          <Button onClick={handleSubmit}><SearchIcon sx={{ color: '#8F030C' }} /></Button>
+          <Button aria-label="Search" onClick={handleSubmit}><SearchIcon sx={{ color: '#8F030C' }} /></Button>
         </InputWrapper>
       </div>
       {groupedOptions.length > 0 ?
         <Suggestion />
-        : null}
+        : <></>}
     </Root>
   );
 }

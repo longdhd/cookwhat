@@ -1,12 +1,14 @@
 import { Box, Typography } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
-import { useEffect } from 'react';
+import { useEffect, lazy } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hook';
-import LoadingLottie from '../components/LoadingLottie';
 import RecipeList from '../components/RecipeList';
 import RecipeSearchSort from '../components/RecipeSearchSort';
 import { debouncedSetFilter, getRecipes, getRecipesByIngredients, recipeActions, selectIngredientArray, selectRecipeFilter, selectRecipeList, selectRecipeLoading, seletIsSearchingRecipesByIngredients } from '../features/recipes/recipeSlice';
 import { ListParams } from '../models/index';
+import recipeLoader from '../assets/lottie/loading.json'
+const LoadingLottie = lazy(() => import('../components/LoadingLottie'));
+
 
 export interface RecipesPageProps {
 }
@@ -68,7 +70,7 @@ export default function RecipesPage(props: RecipesPageProps) {
         </>
       }
       <RecipeSearchSort filter={filter} onSearchChange={handleSearchChange} onSortChange={handleSortChange} />
-      {isLoading ? <LoadingLottie /> : <RecipeList recipeList={recipes} />}
+      {isLoading ? <LoadingLottie data={recipeLoader} /> : <RecipeList recipeList={recipes} />}
     </Box>
   );
 }

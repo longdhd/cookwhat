@@ -1,14 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { StrictMode, lazy, Suspense } from 'react';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
+const App = lazy(() => import('./App'));
 
-const root = ReactDOM.createRoot(
+const root = createRoot(
   document.getElementById('root') as HTMLElement
 );
 
@@ -19,14 +19,16 @@ const theme = createTheme({
 })
 
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <App />
+        <Suspense fallback={<></>}>
+          <App />
+        </Suspense>
         <CssBaseline />
       </ThemeProvider>
     </Provider>
-  </React.StrictMode>
+  </StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
